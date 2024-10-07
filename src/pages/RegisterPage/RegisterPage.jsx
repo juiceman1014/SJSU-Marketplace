@@ -2,7 +2,7 @@ import './RegisterPage.css'
 
 const RegisterPage = () =>{
     return(
-        <div className = "parent-container">
+        <div className = "register-parent-container">
             <div>Register Page</div>
         </div>
     )

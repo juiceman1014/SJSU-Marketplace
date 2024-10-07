@@ -2,7 +2,7 @@ import './HomePage.css'
 
 const HomePage = () =>{
     return(
-        <div className = "parent-container">
+        <div className = "home-parent-container">
             <div>Home Page</div>
         </div>
     )
