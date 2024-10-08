@@ -13,15 +13,12 @@ const LoginPage = () => {
     try{
         const userInfo = await signInWithEmailAndPassword(auth, email, password);
         const user = userInfo.user;
-        console.log("Success: " + user.email);
 
         if(user.emailVerified){
             alert("Login successful!");
-            console.log("Success: " + user.email);
         }else{
             alert("Please verify your email before logging in!");
             auth.signOut();
-            console.log("Failure: " + user.email);
         }
     }catch(error){
         alert(`Error encountered: ${error.message}`);
