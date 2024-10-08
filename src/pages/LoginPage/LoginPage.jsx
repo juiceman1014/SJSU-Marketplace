@@ -1,11 +1,56 @@
-import './LoginPage.css'
+import "./LoginPage.css";
+import { useState } from "react";
+import { auth } from "../../configuration/firebase-config.js";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-const LoginPage = () =>{
-    return(
-        <div className = "login-parent-container">
-            <div>Login Page</div>
-        </div>
-    )
-}
+const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-export default LoginPage
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try{
+        const userInfo = await signInWithEmailAndPassword(auth, email, password);
+        const user = userInfo.user;
+        console.log("Success: " + user.email);
+
+        if(user.emailVerified){
+            alert("Login successful!");
+            console.log("Success: " + user.email);
+        }else{
+            alert("Please verify your email before logging in!");
+            auth.signOut();
+            console.log("Failure: " + user.email);
+        }
+    }catch(error){
+        alert(`Error encountered: ${error.message}`);
+    }
+  };
+
+  return (
+    <div className="login-parent-container">
+      <header>Login</header>
+
+      <form className="login-form" onSubmit = {handleLogin}>
+        <input
+          type="email"
+          placeholder="Email Address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        ></input>
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        ></input>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
+};
+
+export default LoginPage;
