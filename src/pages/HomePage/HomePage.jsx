@@ -7,7 +7,7 @@ const HomePage = () =>{
             <div className = "links-div">
                 <p><Link to="/register">Register</Link></p>
                 <p><Link to="/login">Log In</Link></p>
-                <p>Post</p>
+                <p><Link to="/listing">Listings</Link></p>
             </div>
         </div>
     )
