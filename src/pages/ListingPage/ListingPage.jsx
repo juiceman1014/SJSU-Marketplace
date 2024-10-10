@@ -1,11 +1,15 @@
-import './ListingPage.css'
+import "./ListingPage.css";
+import Header from "../../components/Header/Header";
 
-const ListingPage = () =>{
-    return(
-        <div className = "listing-parent-container">
-            <div>Listings</div>
-        </div>
-    )
-}
+const ListingPage = () => {
+  return (
+    <div>
+      <Header />
+      <div className="listing-container">
+        <div>Listings</div>
+      </div>
+    </div>
+  );
+};
 
-export default ListingPage
+export default ListingPage;

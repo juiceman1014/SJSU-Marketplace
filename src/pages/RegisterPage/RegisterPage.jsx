@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
+import Header from "../../components/Header/Header";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -13,9 +14,9 @@ const RegisterPage = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    if(!email.endsWith("@sjsu.edu")){
-        alert("Email must end with @sjsu.edu");
-        return;
+    if (!email.endsWith("@sjsu.edu")) {
+      alert("Email must end with @sjsu.edu");
+      return;
     }
 
     try {
@@ -35,26 +36,29 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="register-container">
-      <header>Register</header>
+    <div>
+      <Header/>
+      <div className="register-container">
+        <header>Register</header>
 
-      <form className="register-form" onSubmit = {handleRegister}>
-        <input type="email" 
-        placeholder="Email Address" 
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        >
-        </input>
-        <input type="password" 
-        placeholder="Password" 
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        >
-        </input>
-        <button type = "submit">Submit</button>
-      </form>
+        <form className="register-form" onSubmit={handleRegister}>
+          <input
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          ></input>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          ></input>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
     </div>
   );
 };
