@@ -2,7 +2,7 @@ import './ProfilePage.css'
 
 const ProfilePage = () =>{
     return(
-        <div className = "post-parent-container">
+        <div className = "profile-parent-container">
             <div>Profile Page</div>
         </div>
     )

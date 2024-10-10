@@ -2,7 +2,7 @@ import './ListingPage.css'
 
 const ListingPage = () =>{
     return(
-        <div className = "post-parent-container">
+        <div className = "listing-parent-container">
             <div>Listings</div>
         </div>
     )
