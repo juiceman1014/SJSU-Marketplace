@@ -26,7 +26,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-parent-container">
+    <div className="login-container">
       <header>Login</header>
 
       <form className="login-form" onSubmit = {handleLogin}>

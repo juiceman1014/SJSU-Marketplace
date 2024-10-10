@@ -35,7 +35,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="register-parent-container">
+    <div className="register-container">
       <header>Register</header>
 
       <form className="register-form" onSubmit = {handleRegister}>
