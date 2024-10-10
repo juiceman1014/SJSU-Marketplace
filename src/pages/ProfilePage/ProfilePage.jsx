@@ -1,11 +1,20 @@
-import './ProfilePage.css'
+import "./ProfilePage.css";
+import Header from "../../components/Header/Header";
 
-const ProfilePage = () =>{
-    return(
-        <div className = "profile-parent-container">
-            <div>Profile Page</div>
-        </div>
-    )
-}
+const ProfilePage = () => {
+  return (
+    <div>
+      <Header />
+      <div className="profile-container">
+        <header>Profile</header>
 
-export default ProfilePage
+        <form className="profile-form">
+          <input placeholder="Username"></input>
+          <button type="submit">Update</button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default ProfilePage;
