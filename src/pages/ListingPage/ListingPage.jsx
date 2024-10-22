@@ -34,11 +34,52 @@ const ListingPage = () => {
         return "Anonymous";
       }
     } catch (error){
+      console.log(error);
       return "Anonymous";
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUploading(true);
 
+    try{
+      const userID = auth.currentUser.uid;
+      const userName = await fetchUsername(userID);
+
+      let imageUrl = "";
+
+      if(image){
+        const storagePath = `images/${userID}/${image.name}`;
+        const imageRef = storageRef(storage, storagePath);
+        const snapshot = await uploadBytes(imageRef, image);
+        imageUrl = await getDownloadURL(snapshot.ref);
+      }
+    
+
+    const itemRef = dbRef(db, "items");
+    const newItem = {
+      userID,
+      userName,
+      imageUrl,
+      title,
+      category,
+      condition,
+      description,
+      price,
+    };
+
+    await push(itemRef, newItem);
+
+    setListings((prevListings) => [...prevListings, newItem]);
+    closeModal();
+    alert("Item listed successfully!");
+  }catch (error){
+    alert("Failed to list item: " + error);
+  } finally{
+    setUploading(false);
+  }
+};
 
   return (
     <div>
