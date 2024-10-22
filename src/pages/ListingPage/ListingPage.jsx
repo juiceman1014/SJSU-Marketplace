@@ -1,5 +1,6 @@
 import "./ListingPage.css";
 import Header from "../../components/Header/Header";
+import { useState, useEffect } from "react";
 import { auth, db, storage } from "../../configuration/firebase-config.js";
 import { ref as dbRef, push, get, child } from "firebase/database";
 import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -15,6 +16,23 @@ const ListingPage = () => {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    const fetchListings = async() => {
+      try{
+        const itemsRef = dbRef(db, "items");
+        const snapshot = await get(itemsRef);
+        if(snapshot.exists()){
+          const items = Object.values(snapshot.val());
+          setListings(items);
+        }
+      }catch(error){
+        alert("Failed to fetch listings" + error);
+      }
+    };
+
+    fetchListings();
+  }, []);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -103,7 +121,7 @@ const ListingPage = () => {
             ))}
           </div>
 
-          
+
         </div>
       </div>
     </div>
