@@ -24,6 +24,20 @@ const ListingPage = () => {
     setModalIsOpen(false);
   };
 
+  const fetchUsername = async (userID) => {
+    try{
+      const userRef = dbRef(db, `users/${userID}`);
+      const snapshot = await get(child(userRef, "username"));
+      if(snapshot.exists()){
+        return snapshot.val();
+      }else{
+        return "Anonymous";
+      }
+    } catch (error){
+      return "Anonymous";
+    }
+  };
+
 
 
   return (
