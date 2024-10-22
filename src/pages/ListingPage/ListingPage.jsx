@@ -85,7 +85,26 @@ const ListingPage = () => {
     <div>
       <Header />
       <div className="listing-container">
-        <div>Listings</div>
+        <div>
+          <h>Listings</h>
+          <button onClick = {openModal}>Click here to start listing!</button>
+
+          <div className = "item-list">
+            {listings.map((item, index) => (
+              <div key = {index} className = "item">
+                <h>{item.title}</h>
+                {item.imageUrl && <img src = {item.imageUrl}></img>}
+                <p>Category: {item.category}</p>
+                <p>Condition: {item.condition}</p>
+                <p>Description: {item.description}</p>
+                <p>Price: {item.price}</p>
+                <p>Seller: {item.userName}</p>
+              </div>
+            ))}
+          </div>
+
+          
+        </div>
       </div>
     </div>
   );
