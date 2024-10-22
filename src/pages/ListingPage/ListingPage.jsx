@@ -16,7 +16,13 @@ const ListingPage = () => {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
 
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
 
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
 
 
