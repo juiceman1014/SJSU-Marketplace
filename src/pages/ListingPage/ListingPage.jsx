@@ -121,6 +121,7 @@ const ListingPage = () => {
                 <p>Description: {item.description}</p>
                 <p>Price: {item.price}</p>
                 <p>Seller: {item.userName}</p>
+                <button onClick = {() => navigateToMessagePage(item.userID)}>Contact Seller</button>
               </div>
             ))}
           </div>
