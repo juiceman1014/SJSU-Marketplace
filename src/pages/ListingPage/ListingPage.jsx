@@ -40,8 +40,11 @@ const ListingPage = () => {
   }, []);
 
   const navigate = useNavigate();
+
   const navigateToMessagePage = (sellerID) => {
-    navigate(`/message/${sellerID}`);
+    const buyerID = auth.currentUser.uid;
+    const conversationID = [buyerID, sellerID].sort().join("_");
+    navigate(`message/${buyerID}/${sellerID}/${conversationID}`);
   };
 
   const openModal = () => {
