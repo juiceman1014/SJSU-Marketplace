@@ -9,6 +9,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 
 const ListingPage = () => {
   const [listings, setListings] = useState([]);
@@ -37,6 +38,11 @@ const ListingPage = () => {
 
     fetchListings();
   }, []);
+
+  const navigate = useNavigate();
+  const navigateToMessagePage = (sellerID) => {
+    navigate(`/message/${sellerID}`);
+  };
 
   const openModal = () => {
     setModalIsOpen(true);
