@@ -15,7 +15,7 @@ function App() {
       <Route path = "/login" element = {<LoginPage />} />
       <Route path = "/listing" element = {<ListingPage />} />
       <Route path = "/profile" element = {<ProfilePage />} />
-      <Route path = "/message" element ={<MessagePage/>}/>
+      {/* <Route path = "/message" element ={<MessagePage/>}/> */}
       <Route path = "/message/:buyerID/:sellerID/:conversationID" element ={<MessagePage/>}/>
     </Routes>
   )
