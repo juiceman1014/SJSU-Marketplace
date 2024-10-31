@@ -7,7 +7,7 @@ import "./MessagePage.css";
 const MessagePage = () => {
     const { buyerID, sellerID, conversationID } = useParams();
     const [conversations, setConversations] = useState([]);
-    const [ messages, setMessage ] = useState([]);
+    const [ messages, setMessages ] = useState([]);
     const [ newMessages, setNewMesage] = useState("");
     const currentUserID = auth.currentUser.uid;
 
@@ -21,6 +21,17 @@ const MessagePage = () => {
 
         return() => unsubscribe();
     }, [currentUserID]);
+
+    useEffect(() => {
+        const messagesRef = ref(db, `conversations/${conversationID}/messages`);
+        onValue(messagesRef, (snapshot) => {
+            if(snapshot.exists()){
+                setMessages(Object.values(snapshot.val()));
+            }else{
+                setMessages([]);
+            }
+        });
+    }, [conversationID]);
     
     return(
         <div>
