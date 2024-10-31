@@ -58,11 +58,22 @@ const MessagePage = () => {
                     </div>
                 ))}
             </div>
-
-
             
+            <div className = "conversation-messages">
+                <h3>Conversation with {sellerID} </h3>
+                <div className = "messages-list">
+                    {messages.map((msg, index) => (
+                        <div key = {index} className = {msg.senderID === currentUserID ? "message-outgoing" : "message-incoming"}>
+                            <p>{msg.message}</p>
+                        </div>
+                    ))}
+                </div>
+                <form onSubmit = {handleSendMessage}>
+                    <input type = "text" placeholder = "Typer your message..." value = {newMessage} onChange={(e) => setNewMessage(e.target.value)}/>
+                    <button type = "submit">Send</button>
+                </form>
+            </div>  
         </div>
-
     );
 };
 
