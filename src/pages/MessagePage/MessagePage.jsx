@@ -24,15 +24,20 @@ const MessagePage = () => {
 
     useEffect(() => {
         const messagesRef = ref(db, `conversations/${conversationID}/messages`);
-        onValue(messagesRef, (snapshot) => {
+        const unsubscribe = onValue(messagesRef, (snapshot) => {
             if(snapshot.exists()){
                 setMessages(Object.values(snapshot.val()));
             }else{
                 setMessages([]);
             }
         });
+
+        return () => unsubscribe();
+
     }, [conversationID]);
     
+    
+
     return(
         <div>
             <div className = "message-container">Message Page</div>
