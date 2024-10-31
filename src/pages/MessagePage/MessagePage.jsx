@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db, auth } from "../../configuration/firebase-config";
-import { ref, onValue, push, update } from "firebase/database";
+import { ref, onValue, push, update} from "firebase/database";
 import "./MessagePage.css";
 
 const MessagePage = () => {
