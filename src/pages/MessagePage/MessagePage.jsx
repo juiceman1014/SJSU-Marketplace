@@ -114,7 +114,7 @@ const MessagePage = () => {
             <div className = "conversations-list">
                 <h3>Your Conversations</h3>
                 {conversations.map((convoID) => (
-                    <div key = {convoID} onClick = {() => setMessages([])}>
+                    <div key = {convoID} >
                         <p>{convoID === conversationID ? `Conversation with ${otherPersonName}` : `Conversation ID: ${convoID}`}</p>
                     </div>
                 ))}
