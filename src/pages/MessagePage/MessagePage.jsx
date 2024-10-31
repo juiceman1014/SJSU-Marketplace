@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db, auth } from "../../configuration/firebase-config";
 import { ref, onValue, push, update} from "firebase/database";
+import { onAuthStateChanged } from "firebase/auth";
 import "./MessagePage.css";
 
 const MessagePage = () => {
@@ -9,7 +10,21 @@ const MessagePage = () => {
     const [conversations, setConversations] = useState([]);
     const [ messages, setMessages ] = useState([]);
     const [ newMessage, setNewMessage] = useState("");
-    const currentUserID = auth.currentUser.uid;
+    const [ currentUserID, setCurrentUserID] = useState(null);
+    const [ loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth,(user) => {
+            if(user){
+                setCurrentUserID(user.uid);
+            }else{
+                setCurrentUserID(null);
+            }
+            setLoading(false);
+        })
+
+        return () => unsubscribe;
+    }, []);
 
     useEffect(() => {
         const userConversationsRef = ref(db, `users/${currentUserID}/conversations`);
@@ -23,6 +38,7 @@ const MessagePage = () => {
     }, [currentUserID]);
 
     useEffect(() => {
+        
         const messagesRef = ref(db, `conversations/${conversationID}/messages`);
         const unsubscribe = onValue(messagesRef, (snapshot) => {
             if(snapshot.exists()){
@@ -47,6 +63,15 @@ const MessagePage = () => {
         await update(conversationRef, { lastMessageSnippet: newMessage, lestMessageTimestamp: Date.now() });
         setNewMessage("");
     }
+
+    if(loading){
+        return <p>Loading...</p>;
+    }
+
+    if(!currentUserID){
+        return<p>Pleaes log in to view your mesages.</p>;
+    }
+    
 
     return(
         <div className = "messages-container">
