@@ -8,7 +8,7 @@ const MessagePage = () => {
     const { buyerID, sellerID, conversationID } = useParams();
     const [conversations, setConversations] = useState([]);
     const [ messages, setMessages ] = useState([]);
-    const [ newMessage, setNewMesage] = useState("");
+    const [ newMessage, setNewMessage] = useState("");
     const currentUserID = auth.currentUser.uid;
 
     useEffect(() => {
@@ -38,7 +38,7 @@ const MessagePage = () => {
     
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        if(!newMessages.trim()) return;
+        if(!newMessage.trim()) return;
 
         const messageRef = ref(db, `conversations/${conversationID}/messages`);
         await push(messageRef, {senderID: currentUserID, message: newMessage, timestamp: Date.now() });
@@ -49,8 +49,18 @@ const MessagePage = () => {
     }
 
     return(
-        <div>
-            <div className = "message-container">Message Page</div>
+        <div className = "messages-container">
+            <div className = "conversations-list">
+                <h3>Your Conversations</h3>
+                {conversations.map((convoID) => (
+                    <div key = {convoID} onClick = {() => setMessages([])}>
+                        <p>{convoID === conversationID ? `Conversation with ${sellerID}` : `Conversation ID: ${convoID}`}</p>
+                    </div>
+                ))}
+            </div>
+
+
+            
         </div>
 
     );
