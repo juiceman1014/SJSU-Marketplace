@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { db, auth } from "../../configuration/firebase-config";
 import { ref, onValue, push, update, get} from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
@@ -15,6 +15,7 @@ const MessagePage = () => {
     const [ loading, setLoading] = useState(true);
     const [ otherPersonName, setOtherPersonName ] = useState("");
     const [ currentUserName, setCurrentUsername ] = useState("");
+    const navigate = useNavigate();
 
 
     const otherPersonID = currentUserID === buyerID ? sellerID : buyerID;
@@ -119,6 +120,18 @@ const MessagePage = () => {
         setNewMessage("");
     }
 
+    const handleConversationClick = async (convoID) =>{
+        const conversationRef = ref(db, `conversations/${convoID}/participants`);
+        const snapshot = await get(conversationRef);
+
+        if(snapshot.exists){
+            const participants = Object.keys(snapshot.val());
+            const buyerID = participants[0];
+            const sellerID = participants[1];
+            navigate(`/message/${buyerID}/${sellerID}/${convoID}`);
+        }
+    };
+
     if(loading){
         return <p>Loading...</p>;
     }
@@ -133,7 +146,7 @@ const MessagePage = () => {
             <div className = "conversations-list">
                 <h3>Your Conversations</h3>
                 {conversations.map((convoID) => (
-                    <div key = {convoID} >
+                    <div key = {convoID} onClick = {() => handleConversationClick(convoID)}>
                         <p>{`Conversation with ${conversationNames[convoID] || "Unknown User"}`}</p>
                     </div>
                 ))}
