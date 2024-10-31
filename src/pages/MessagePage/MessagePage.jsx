@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db, auth } from "../../configuration/firebase-config";
-import { ref, onValue, push, update} from "firebase/database";
+import { ref, onValue, push, update, get} from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import "./MessagePage.css";
 
@@ -12,11 +12,22 @@ const MessagePage = () => {
     const [ newMessage, setNewMessage] = useState("");
     const [ currentUserID, setCurrentUserID] = useState(null);
     const [ loading, setLoading] = useState(true);
+    const [ otherPersonName, setOtherPersonName ] = useState("");
+    const [ currentUserName, setCurrentUsername ] = useState("");
+
+    const otherPersonID = currentUserID === buyerID ? sellerID : buyerID;
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth,(user) => {
             if(user){
                 setCurrentUserID(user.uid);
+
+                const userRef = ref(db, `users/${user.uid}/username`);
+                get(userRef).then((snapshot) => {
+                    if(snapshot.exists()){
+                        setCurrentUsername(snapshot.val());
+                    }
+                });
             }else{
                 setCurrentUserID(null);
             }
@@ -38,11 +49,36 @@ const MessagePage = () => {
     }, [currentUserID]);
 
     useEffect(() => {
+        if(!otherPersonID) return;
+
+        const fetchUsername = async() =>{
+            try{
+                const userRef = ref(db, `users/${otherPersonID}/username`);
+                const snapshot = await get(userRef);
+                if(snapshot.exists()){
+                    setOtherPersonName(snapshot.val());
+                }else{
+                    setOtherPersonName("Unknown User");
+                }
+            }catch(error){
+                console.error("Error fetching username: ", error);
+                setOtherPersonName("Unknown User");
+            }
+        }
+        
+        fetchUsername();
+    }, [otherPersonID]);
+
+    useEffect(() => {
         
         const messagesRef = ref(db, `conversations/${conversationID}/messages`);
         const unsubscribe = onValue(messagesRef, (snapshot) => {
             if(snapshot.exists()){
-                setMessages(Object.values(snapshot.val()));
+                const messagesWithNames = Object.values(snapshot.val()).map((msg) => ({
+                    ...msg,
+                    senderName: msg.senderID === currentUserID ? currentUserName : otherPersonName,
+                }));
+                setMessages(messagesWithNames);
             }else{
                 setMessages([]);
             }
@@ -50,14 +86,14 @@ const MessagePage = () => {
 
         return () => unsubscribe();
 
-    }, [conversationID]);
+    }, [conversationID, currentUserName, otherPersonName, currentUserID]);
     
     const handleSendMessage = async (e) => {
         e.preventDefault();
         if(!newMessage.trim()) return;
 
         const messageRef = ref(db, `conversations/${conversationID}/messages`);
-        await push(messageRef, {senderID: currentUserID, message: newMessage, timestamp: Date.now() });
+        await push(messageRef, {senderID: currentUserID, senderName: currentUserName, message: newMessage, timestamp: Date.now() });
         
         const conversationRef = ref(db, `conversations/${conversationID}`);
         await update(conversationRef, { lastMessageSnippet: newMessage, lestMessageTimestamp: Date.now() });
@@ -79,17 +115,17 @@ const MessagePage = () => {
                 <h3>Your Conversations</h3>
                 {conversations.map((convoID) => (
                     <div key = {convoID} onClick = {() => setMessages([])}>
-                        <p>{convoID === conversationID ? `Conversation with ${sellerID}` : `Conversation ID: ${convoID}`}</p>
+                        <p>{convoID === conversationID ? `Conversation with ${otherPersonName}` : `Conversation ID: ${convoID}`}</p>
                     </div>
                 ))}
             </div>
             
             <div className = "conversation-messages">
-                <h3>Conversation with {sellerID} </h3>
+                <h3>Conversation with {otherPersonName} </h3>
                 <div className = "messages-list">
                     {messages.map((msg, index) => (
                         <div key = {index} className = {msg.senderID === currentUserID ? "message-outgoing" : "message-incoming"}>
-                            <p>{msg.message}</p>
+                            <p> <strong>{msg.senderName}:</strong> {msg.message}</p>
                         </div>
                     ))}
                 </div>
