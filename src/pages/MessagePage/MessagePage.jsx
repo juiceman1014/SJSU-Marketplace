@@ -8,7 +8,7 @@ const MessagePage = () => {
     const { buyerID, sellerID, conversationID } = useParams();
     const [conversations, setConversations] = useState([]);
     const [ messages, setMessages ] = useState([]);
-    const [ newMessages, setNewMesage] = useState("");
+    const [ newMessage, setNewMesage] = useState("");
     const currentUserID = auth.currentUser.uid;
 
     useEffect(() => {
@@ -36,7 +36,17 @@ const MessagePage = () => {
 
     }, [conversationID]);
     
-    
+    const handleSendMessage = async (e) => {
+        e.preventDefault();
+        if(!newMessages.trim()) return;
+
+        const messageRef = ref(db, `conversations/${conversationID}/messages`);
+        await push(messageRef, {senderID: currentUserID, message: newMessage, timestamp: Date.now() });
+        
+        const conversationRef = ref(db, `conversations/${conversationID}`);
+        await update(conversationRef, { lastMessageSnippet: newMessage, lestMessageTimestamp: Date.now() });
+        setNewMessage("");
+    }
 
     return(
         <div>
