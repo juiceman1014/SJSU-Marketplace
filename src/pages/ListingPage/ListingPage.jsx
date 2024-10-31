@@ -2,7 +2,7 @@ import "./ListingPage.css";
 import Header from "../../components/Header/Header";
 import { useState, useEffect } from "react";
 import { auth, db, storage } from "../../configuration/firebase-config.js";
-import { ref as dbRef, push, get, child } from "firebase/database";
+import { ref as dbRef, push, get, child, ref, set } from "firebase/database";
 import {
   ref as storageRef,
   uploadBytes,
@@ -41,10 +41,28 @@ const ListingPage = () => {
 
   const navigate = useNavigate();
 
-  const navigateToMessagePage = (sellerID) => {
+  const navigateToMessagePage = async (sellerID) => {
     const buyerID = auth.currentUser.uid;
     const conversationID = [buyerID, sellerID].sort().join("_");
-    navigate(`message/${buyerID}/${sellerID}/${conversationID}`);
+
+    const conversationRef = ref(db,`conversations/${conversationID}`);
+    const snapshot = await get(conversationRef);
+
+    if(!snapshot.exists()){
+        await set(conversationRef, {
+            participants:{
+                [buyerID]:true,
+                [sellerID]:true,
+            },
+            lastMessageSnippet: "",
+            lastMessageTimestamp: Date.now(),
+        });
+
+        await set(ref(db, `users/${buyerID}/conversations/${conversationID}`), true);
+        await set(ref(db, `users/${sellerID}/conversations/${conversationID}`), true);
+    }
+
+    navigate(`/message/${buyerID}/${sellerID}/${conversationID}`);
   };
 
   const openModal = () => {
