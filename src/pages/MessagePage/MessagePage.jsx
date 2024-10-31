@@ -7,13 +7,15 @@ import "./MessagePage.css";
 
 const MessagePage = () => {
     const { buyerID, sellerID, conversationID } = useParams();
-    const [conversations, setConversations] = useState([]);
+    const [ conversations, setConversations ] = useState([]);
+    const [ conversationNames, setConversationNames ] = useState({});
     const [ messages, setMessages ] = useState([]);
     const [ newMessage, setNewMessage] = useState("");
     const [ currentUserID, setCurrentUserID] = useState(null);
     const [ loading, setLoading] = useState(true);
     const [ otherPersonName, setOtherPersonName ] = useState("");
     const [ currentUserName, setCurrentUsername ] = useState("");
+
 
     const otherPersonID = currentUserID === buyerID ? sellerID : buyerID;
 
@@ -39,9 +41,26 @@ const MessagePage = () => {
 
     useEffect(() => {
         const userConversationsRef = ref(db, `users/${currentUserID}/conversations`);
-        const unsubscribe = onValue(userConversationsRef, (snapshot) => {
+        const unsubscribe = onValue(userConversationsRef, async (snapshot) => {
             if(snapshot.exists()){
-                setConversations(Object.keys(snapshot.val()));
+                const conversationIDs = Object.keys(snapshot.val());
+                setConversations(conversationIDs);
+
+                const names = {};
+                for(const convoID of conversationIDs){
+                    const [id1, id2] = convoID.split("_");
+                    const otherUserID = id1 === currentUserID ? id2 : id1;
+
+                    const otherUserRef = ref(db, `users/${otherUserID}/username`);
+                    const otherUserSnapshot = await get(otherUserRef);
+                    if(otherUserSnapshot.exists()){
+                        names[convoID] = otherUserSnapshot.val();
+                    }else{
+                        names[convoID] = "Unknown User";
+                    }
+                }
+
+                setConversationNames(names);
             }
         });
 
@@ -115,7 +134,7 @@ const MessagePage = () => {
                 <h3>Your Conversations</h3>
                 {conversations.map((convoID) => (
                     <div key = {convoID} >
-                        <p>{convoID === conversationID ? `Conversation with ${otherPersonName}` : `Conversation ID: ${convoID}`}</p>
+                        <p>{`Conversation with ${conversationNames[convoID] || "Unknown User"}`}</p>
                     </div>
                 ))}
             </div>
