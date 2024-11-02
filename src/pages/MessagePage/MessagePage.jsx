@@ -4,6 +4,7 @@ import { db, auth } from "../../configuration/firebase-config";
 import { ref, onValue, push, update, get} from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import "./MessagePage.css";
+import Header from "../../components/Header/Header";
 
 const MessagePage = () => {
     const { buyerID, sellerID, conversationID } = useParams();
@@ -142,36 +143,39 @@ const MessagePage = () => {
     
 
     return(
-        <div className = "messages-container">
-            <div className = "conversations-list">
-                <h3>Your Conversations</h3>
-                {conversations.map((convoID) => (
-                    <div key = {convoID} onClick = {() => handleConversationClick(convoID)}>
-                        <p>{`Conversation with ${conversationNames[convoID] || "Unknown User"}`}</p>
-                    </div>
-                ))}
-            </div>
-            
-            {!isGeneralMessagePage && (
-            <div className = "conversation-messages">
-                <h3>Conversation with {otherPersonName} </h3>
-                <div className = "messages-list">
-                    {messages.map((msg, index) => (
-                        <div key = {index} className = {msg.senderID === currentUserID ? "message-outgoing" : "message-incoming"}>
-                            <p> <strong>{msg.senderName}:</strong> {msg.message}</p>
+        <div>
+            <Header/>
+            <div className = "messages-container">
+                <div className = "conversations-list">
+                    <h3>Your Conversations</h3>
+                    {conversations.map((convoID) => (
+                        <div key = {convoID} onClick = {() => handleConversationClick(convoID)}>
+                            <p>{`Conversation with ${conversationNames[convoID] || "Unknown User"}`}</p>
                         </div>
                     ))}
                 </div>
-                <form onSubmit = {handleSendMessage}>
-                    <input type = "text" placeholder = "Typer your message..." value = {newMessage} onChange={(e) => setNewMessage(e.target.value)}/>
-                    <button type = "submit">Send</button>
-                </form>
-            </div> 
-            )}
+                
+                {!isGeneralMessagePage && (
+                <div className = "conversation-messages">
+                    <h3>Conversation with {otherPersonName} </h3>
+                    <div className = "messages-list">
+                        {messages.map((msg, index) => (
+                            <div key = {index} className = {msg.senderID === currentUserID ? "message-outgoing" : "message-incoming"}>
+                                <p> <strong>{msg.senderName}:</strong> {msg.message}</p>
+                            </div>
+                        ))}
+                    </div>
+                    <form onSubmit = {handleSendMessage}>
+                        <input type = "text" placeholder = "Typer your message..." value = {newMessage} onChange={(e) => setNewMessage(e.target.value)}/>
+                        <button type = "submit">Send</button>
+                    </form>
+                </div> 
+                )}
 
-            {isGeneralMessagePage && (
-                <p>Select a conversation to get started!</p>
-             )} 
+                {isGeneralMessagePage && (
+                    <p>Select a conversation to get started!</p>
+                )} 
+            </div>
         </div>
     );
 };
