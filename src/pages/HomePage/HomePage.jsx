@@ -1,9 +1,13 @@
 import './HomePage.css'
+import Header from '../../components/Header/Header'
 
 const HomePage = () =>{
     return(
-        <div className = "home-container">
-            Home Page
+        <div>
+            <Header/>
+            <div className = "home-container">
+                Home Page
+            </div>
         </div>
     )
 }
