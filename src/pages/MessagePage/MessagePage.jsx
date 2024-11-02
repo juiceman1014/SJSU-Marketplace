@@ -17,7 +17,7 @@ const MessagePage = () => {
     const [ currentUserName, setCurrentUsername ] = useState("");
     const navigate = useNavigate();
 
-
+    const isGeneralMessagePage = !buyerID || !sellerID || !conversationID;
     const otherPersonID = currentUserID === buyerID ? sellerID : buyerID;
 
     useEffect(() => {
@@ -152,6 +152,7 @@ const MessagePage = () => {
                 ))}
             </div>
             
+            {!isGeneralMessagePage && (
             <div className = "conversation-messages">
                 <h3>Conversation with {otherPersonName} </h3>
                 <div className = "messages-list">
@@ -165,7 +166,12 @@ const MessagePage = () => {
                     <input type = "text" placeholder = "Typer your message..." value = {newMessage} onChange={(e) => setNewMessage(e.target.value)}/>
                     <button type = "submit">Send</button>
                 </form>
-            </div>  
+            </div> 
+            )}
+
+            {isGeneralMessagePage && (
+                <p>Select a conversation to get started!</p>
+             )} 
         </div>
     );
 };
