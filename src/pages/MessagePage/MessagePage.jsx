@@ -138,7 +138,7 @@ const MessagePage = () => {
     }
 
     if(!currentUserID){
-        return<p>Pleaes log in to view your mesages.</p>;
+        return<p>Please log in to view your messages.</p>;
     }
     
 
