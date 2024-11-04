@@ -1,7 +1,15 @@
 import './Header.css'
-import { Link } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom'; 
+import { useState, useEffect } from "react";
+import { auth, db } from "../../configuration/firebase-config.js";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { ref, get } from "firebase/database";
 
 const Header = () =>{
+    const [user, setUser] = useState(null);
+    const [username, setUsername] = useState("");
+    const navigate = useNavigate();
+    
     return(
         <div className = "header-parent-container">
             <p><Link to="/">Home</Link></p>
