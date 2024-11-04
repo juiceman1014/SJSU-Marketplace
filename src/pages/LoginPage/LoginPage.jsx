@@ -3,6 +3,7 @@ import { useState } from "react";
 import { auth } from "../../configuration/firebase-config.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Header from "../../components/Header/Header";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -48,6 +49,7 @@ const LoginPage = () => {
             required
           ></input>
           <button type="submit">Submit</button>
+          <p>Not signed up? <Link to="/register">Register Now!</Link></p>
         </form>
       </div>
     </div>
