@@ -9,7 +9,35 @@ const Header = () =>{
     const [user, setUser] = useState(null);
     const [username, setUsername] = useState("");
     const navigate = useNavigate();
-    
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            if(currentUser){
+                setUser(currentUser);
+                const userRef = ref(db, `users/${currentUser.uid}/username`);
+                get(userRef).then((snapshot) => {
+                    if(snapshot.exists()){
+                        setUsername(snapshot.val());
+                    }
+                });
+            }else{
+                setUser(null);
+                setUsername("");
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    const handleLogout = () => {
+        signOut(auth).then(() => {
+            navigate("/");
+        }).catch((error) => {
+            alert("Error logging out: ", error);
+        });
+    };
+
+
     return(
         <div className = "header-parent-container">
             <p><Link to="/">Home</Link></p>
