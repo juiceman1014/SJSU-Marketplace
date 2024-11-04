@@ -41,10 +41,18 @@ const Header = () =>{
     return(
         <div className = "header-parent-container">
             <p><Link to="/">Home</Link></p>
-            <p><Link to="/login">Log In</Link></p>
             <p><Link to="/listing">Listings</Link></p>
             <p><Link to="/profile">Profile</Link></p>
             <p><Link to="/message">Messages</Link></p>
+
+            {user ? (
+                <div>
+                <p>Hi, {username}</p>
+                <button onClick = {handleLogout}>Logout</button>
+                </div>
+            ) : (
+                <p><Link to="/login">Log In</Link></p>
+            )}
         </div>
     )
 }
