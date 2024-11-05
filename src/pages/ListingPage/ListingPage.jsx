@@ -2,7 +2,15 @@ import "./ListingPage.css";
 import Header from "../../components/Header/Header";
 import { useState, useEffect } from "react";
 import { auth, db, storage } from "../../configuration/firebase-config.js";
-import { ref as dbRef, push, get, child, ref, set, remove } from "firebase/database";
+import {
+  ref as dbRef,
+  push,
+  get,
+  child,
+  ref,
+  set,
+  remove,
+} from "firebase/database";
 import {
   ref as storageRef,
   uploadBytes,
@@ -45,21 +53,27 @@ const ListingPage = () => {
     const buyerID = auth.currentUser.uid;
     const conversationID = [buyerID, sellerID].sort().join("_");
 
-    const conversationRef = ref(db,`conversations/${conversationID}`);
+    const conversationRef = ref(db, `conversations/${conversationID}`);
     const snapshot = await get(conversationRef);
 
-    if(!snapshot.exists()){
-        await set(conversationRef, {
-            participants:{
-                [buyerID]:true,
-                [sellerID]:true,
-            },
-            lastMessageSnippet: "",
-            lastMessageTimestamp: Date.now(),
-        });
+    if (!snapshot.exists()) {
+      await set(conversationRef, {
+        participants: {
+          [buyerID]: true,
+          [sellerID]: true,
+        },
+        lastMessageSnippet: "",
+        lastMessageTimestamp: Date.now(),
+      });
 
-        await set(ref(db, `users/${buyerID}/conversations/${conversationID}`), true);
-        await set(ref(db, `users/${sellerID}/conversations/${conversationID}`), true);
+      await set(
+        ref(db, `users/${buyerID}/conversations/${conversationID}`),
+        true
+      );
+      await set(
+        ref(db, `users/${sellerID}/conversations/${conversationID}`),
+        true
+      );
     }
 
     navigate(`/message/${buyerID}/${sellerID}/${conversationID}`);
@@ -133,15 +147,17 @@ const ListingPage = () => {
   };
 
   const handleDeleteListing = async (itemID) => {
-    try{
+    try {
       const itemRef = dbRef(db, `items/${itemID}`);
       await remove(itemRef);
-      setListings((prevListings) => prevListings.filter((item) => item.id !== itemID));
+      setListings((prevListings) =>
+        prevListings.filter((item) => item.id !== itemID)
+      );
       alert("Listing deleted successfully!");
-    }catch(error){
+    } catch (error) {
       alert("Failed to delete listing: " + error);
     }
-  }
+  };
 
   return (
     <div>
@@ -155,16 +171,22 @@ const ListingPage = () => {
             {listings.map((item, index) => (
               <div key={index} className="item">
                 <h3>{item.title}</h3>
-                {item.imageUrl && <img src={item.imageUrl} className = "listing-image"></img>}
+                {item.imageUrl && (
+                  <img src={item.imageUrl} className="listing-image"></img>
+                )}
                 <p>Category: {item.category}</p>
                 <p>Condition: {item.condition}</p>
                 <p>Description: {item.description}</p>
                 <p>Price: {item.price}</p>
                 <p>Seller: {item.userName}</p>
                 {item.userID === auth.currentUser.uid ? (
-                  <button onClick = {() => handleDeleteListing(item.ID)}>Delete Listing</button>
-                ) : ( 
-                  <button onClick = {() => navigateToMessagePage(item.userID)}>Contact Seller</button>
+                  <button onClick={() => handleDeleteListing(item.ID)}>
+                    Delete Listing
+                  </button>
+                ) : (
+                  <button onClick={() => navigateToMessagePage(item.userID)}>
+                    Contact Seller
+                  </button>
                 )}
               </div>
             ))}
@@ -185,13 +207,19 @@ const ListingPage = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 required
               ></input>
-              <input
-                type="text"
-                placeholder="category"
+              <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 required
-              ></input>
+              >
+                <option value="" disabled>
+                  Select Category
+                </option>
+                <option value="School Supplies">School Supplies</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Technology">Technology</option>
+                <option value="Other">Other</option>
+              </select>
               <input
                 type="text"
                 placeholder="condition"
