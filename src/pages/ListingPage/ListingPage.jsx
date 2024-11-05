@@ -2,7 +2,7 @@ import "./ListingPage.css";
 import Header from "../../components/Header/Header";
 import { useState, useEffect } from "react";
 import { auth, db, storage } from "../../configuration/firebase-config.js";
-import { ref as dbRef, push, get, child, ref, set } from "firebase/database";
+import { ref as dbRef, push, get, child, ref, set, remove } from "firebase/database";
 import {
   ref as storageRef,
   uploadBytes,
@@ -37,7 +37,7 @@ const ListingPage = () => {
     };
 
     fetchListings();
-  }, []);
+  }, [listings]);
 
   const navigate = useNavigate();
 
@@ -107,7 +107,9 @@ const ListingPage = () => {
       }
 
       const itemRef = dbRef(db, "items");
+      const newItemRef = await push(itemRef);
       const newItem = {
+        ID: newItemRef.key,
         userID,
         userName,
         imageUrl,
@@ -118,7 +120,7 @@ const ListingPage = () => {
         price,
       };
 
-      await push(itemRef, newItem);
+      await set(newItemRef, newItem);
 
       setListings((prevListings) => [...prevListings, newItem]);
       closeModal();
@@ -129,6 +131,17 @@ const ListingPage = () => {
       setUploading(false);
     }
   };
+
+  const handleDeleteListing = async (itemID) => {
+    try{
+      const itemRef = dbRef(db, `items/${itemID}`);
+      await remove(itemRef);
+      setListings((prevListings) => prevListings.filter((item) => item.id !== itemID));
+      alert("Listing deleted successfully!");
+    }catch(error){
+      alert("Failed to delete listing: " + error);
+    }
+  }
 
   return (
     <div>
@@ -148,7 +161,11 @@ const ListingPage = () => {
                 <p>Description: {item.description}</p>
                 <p>Price: {item.price}</p>
                 <p>Seller: {item.userName}</p>
-                <button onClick = {() => navigateToMessagePage(item.userID)}>Contact Seller</button>
+                {item.userID === auth.currentUser.uid ? (
+                  <button onClick = {() => handleDeleteListing(item.ID)}>Delete Listing</button>
+                ) : ( 
+                  <button onClick = {() => navigateToMessagePage(item.userID)}>Contact Seller</button>
+                )}
               </div>
             ))}
           </div>
