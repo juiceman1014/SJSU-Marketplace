@@ -1,4 +1,8 @@
+.title-link {
+    text-decoration:none;
+
 .header-parent-container{
     display: flex;
     justify-content: space-evenly;
+
 }

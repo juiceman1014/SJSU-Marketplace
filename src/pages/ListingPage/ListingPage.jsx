@@ -161,7 +161,7 @@ const ListingPage = () => {
 
   return (
     <div>
-      <Header />
+      
       <div className="listing-container">
         <div>
           <h2>Listings</h2>

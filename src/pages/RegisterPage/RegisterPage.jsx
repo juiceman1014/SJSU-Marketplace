@@ -1,10 +1,12 @@
 import "./RegisterPage.css";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { auth } from "../../configuration/firebase-config.js";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
+
 import Header from "../../components/Header/Header";
 
 const RegisterPage = () => {
@@ -37,27 +39,41 @@ const RegisterPage = () => {
 
   return (
     <div>
-      <Header/>
       <div className="register-container">
-        <header>Register</header>
+        <div className="register-form__box">
+          <header>Welcome</header>
 
-        <form className="register-form" onSubmit={handleRegister}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          ></input>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          ></input>
-          <button type="submit">Submit</button>
-        </form>
+          <form className="register-form" onSubmit={handleRegister}>
+            <div className="register-form__input">
+              <label htmlFor="email">Email:</label>
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              ></input>
+            </div>
+
+            <div className="register-form__input">
+              <label htmlFor="password">Password:</label>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              ></input>
+            </div>
+
+            <button className="register-form__submit" type="submit">
+              Sign Up
+            </button>
+            <Link to="/login" className="register-form__link">
+              Already have an account? <span>Log In</span>
+            </Link>
+          </form>
+        </div>
       </div>
     </div>
   );

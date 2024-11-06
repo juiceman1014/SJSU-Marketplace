@@ -29,28 +29,46 @@ const LoginPage = () => {
 
   return (
     <div>
-      <Header />
       <div className="login-container">
-        <header>Login</header>
+        <div className="login-form__box">
+          <header>Login</header>
 
-        <form className="login-form" onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          ></input>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          ></input>
-          <button type="submit">Submit</button>
-          <p>Not signed up? <Link to="/register">Register Now!</Link></p>
-        </form>
+          <form className="login-form" onSubmit={handleLogin}>
+            <div className="login-form__input">
+              <label htmlFor="email">Username</label>
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              ></input>
+            </div>
+            <div className="login-form__input">
+              <label htmlFor="email">Password</label>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              ></input>
+            </div>
+
+            <button className="login-form__submit" type="submit">
+              Login
+            </button>
+            <Link to="/register" className="login-form__link">
+              Don't have an account? <span>Sign up</span>
+            </Link>
+            
+            <Link to="/password" className="login-form__link">
+              <span>Forgot your password? </span>
+            </Link>
+
+          </form>
+        </div>
+
       </div>
     </div>
   );
