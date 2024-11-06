@@ -2,13 +2,22 @@ import "./ListingPage.css";
 import Header from "../../components/Header/Header";
 import { useState, useEffect } from "react";
 import { auth, db, storage } from "../../configuration/firebase-config.js";
-import { ref as dbRef, push, get, child } from "firebase/database";
+import {
+  ref as dbRef,
+  push,
+  get,
+  child,
+  ref,
+  set,
+  remove,
+} from "firebase/database";
 import {
   ref as storageRef,
   uploadBytes,
   getDownloadURL,
 } from "firebase/storage";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 
 const ListingPage = () => {
   const [listings, setListings] = useState([]);
@@ -36,7 +45,39 @@ const ListingPage = () => {
     };
 
     fetchListings();
-  }, []);
+  }, [listings]);
+
+  const navigate = useNavigate();
+
+  const navigateToMessagePage = async (sellerID) => {
+    const buyerID = auth.currentUser.uid;
+    const conversationID = [buyerID, sellerID].sort().join("_");
+
+    const conversationRef = ref(db, `conversations/${conversationID}`);
+    const snapshot = await get(conversationRef);
+
+    if (!snapshot.exists()) {
+      await set(conversationRef, {
+        participants: {
+          [buyerID]: true,
+          [sellerID]: true,
+        },
+        lastMessageSnippet: "",
+        lastMessageTimestamp: Date.now(),
+      });
+
+      await set(
+        ref(db, `users/${buyerID}/conversations/${conversationID}`),
+        true
+      );
+      await set(
+        ref(db, `users/${sellerID}/conversations/${conversationID}`),
+        true
+      );
+    }
+
+    navigate(`/message/${buyerID}/${sellerID}/${conversationID}`);
+  };
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -80,7 +121,9 @@ const ListingPage = () => {
       }
 
       const itemRef = dbRef(db, "items");
+      const newItemRef = await push(itemRef);
       const newItem = {
+        ID: newItemRef.key,
         userID,
         userName,
         imageUrl,
@@ -91,7 +134,7 @@ const ListingPage = () => {
         price,
       };
 
-      await push(itemRef, newItem);
+      await set(newItemRef, newItem);
 
       setListings((prevListings) => [...prevListings, newItem]);
       closeModal();
@@ -100,6 +143,19 @@ const ListingPage = () => {
       alert("Failed to list item: " + error);
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleDeleteListing = async (itemID) => {
+    try {
+      const itemRef = dbRef(db, `items/${itemID}`);
+      await remove(itemRef);
+      setListings((prevListings) =>
+        prevListings.filter((item) => item.id !== itemID)
+      );
+      alert("Listing deleted successfully!");
+    } catch (error) {
+      alert("Failed to delete listing: " + error);
     }
   };
 
@@ -115,12 +171,23 @@ const ListingPage = () => {
             {listings.map((item, index) => (
               <div key={index} className="item">
                 <h3>{item.title}</h3>
-                {item.imageUrl && <img src={item.imageUrl} className = "listing-image"></img>}
+                {item.imageUrl && (
+                  <img src={item.imageUrl} className="listing-image"></img>
+                )}
                 <p>Category: {item.category}</p>
                 <p>Condition: {item.condition}</p>
                 <p>Description: {item.description}</p>
                 <p>Price: {item.price}</p>
                 <p>Seller: {item.userName}</p>
+                {item.userID === auth.currentUser.uid ? (
+                  <button onClick={() => handleDeleteListing(item.ID)}>
+                    Delete Listing
+                  </button>
+                ) : (
+                  <button onClick={() => navigateToMessagePage(item.userID)}>
+                    Contact Seller
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -140,13 +207,19 @@ const ListingPage = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 required
               ></input>
-              <input
-                type="text"
-                placeholder="category"
+              <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 required
-              ></input>
+              >
+                <option value="" disabled>
+                  Select Category
+                </option>
+                <option value="School Supplies">School Supplies</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Technology">Technology</option>
+                <option value="Other">Other</option>
+              </select>
               <input
                 type="text"
                 placeholder="condition"

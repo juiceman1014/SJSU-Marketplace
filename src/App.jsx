@@ -6,6 +6,7 @@ import ListingPage from "./pages/ListingPage/ListingPage.jsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
 import Header from "./components/Header/Header.jsx";
 import PasswordPage from "./pages/PasswordPage/PasswordPage.jsx"
+import MessagePage from "./pages/MessagePage/MessagePage.jsx"
 
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
         <Route path="/listing" element={<ListingPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/password" element={<PasswordPage />} />
+         <Route path = "/message" element ={<MessagePage/>}/>
+        <Route path = "/message/:buyerID/:sellerID/:conversationID" element ={<MessagePage/>}/>
       </Routes>
     </div>
   );

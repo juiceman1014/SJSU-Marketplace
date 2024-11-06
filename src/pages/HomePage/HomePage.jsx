@@ -1,3 +1,4 @@
+
 import './HomePage.css';
 import { Link } from 'react-router-dom';
 
@@ -21,6 +22,7 @@ const HomePage = () => {
                 </Link>
                 </div>
                 <div className="image-placeholder"></div>
+
             </div>
         </div>
     );
