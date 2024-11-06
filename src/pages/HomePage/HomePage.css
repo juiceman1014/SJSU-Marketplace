@@ -1,7 +1,92 @@
-.home-container{
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+/* Container */
+.home-container {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  background-color: #f3f8fd;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: bold;
+  color: #004987;
+}
+
+.marketplace {
+  color: #f7b500;
+}
+
+.nav-links a {
+  margin: 0 10px;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+/* Banner */
+.banner {
+  background-color: #f7b500;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+  font-family: "Inknut Antiqua", sans-serif;
+}
+
+/* Content Section */
+.content {
+  background-color: #e6f3ff;
+  padding: 100px;
+  margin-top: 0px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.description {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-family: "Inknut Antiqua", sans-serif;
+}
+
+.sign-up-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: "Inknut Antiqua", sans-serif;
+}
+
+.sign-up-button:hover {
+  background-color: #0056b3;
+}
+
+.text {
+  max-width: 30%;
+}
+
+.image-placeholder {
+  width: 55%;
+  height: 400px;
+  background-color: #ccc;
+  border-radius: 4px;
 }
