@@ -1,5 +1,4 @@
 import "./ProfilePage.css";
-import Header from "../../components/Header/Header";
 import { useState } from "react";
 import { auth, db } from "../../configuration/firebase-config.js";
 import { ref, update } from "firebase/database";
@@ -25,7 +24,6 @@ const ProfilePage = () => {
   };
   return (
     <div>
-      <Header />
       <div className="profile-container">
         <header>Profile</header>
 

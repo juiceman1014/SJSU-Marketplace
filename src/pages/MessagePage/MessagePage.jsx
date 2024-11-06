@@ -4,7 +4,6 @@ import { db, auth } from "../../configuration/firebase-config";
 import { ref, onValue, push, update, get} from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import "./MessagePage.css";
-import Header from "../../components/Header/Header";
 
 const MessagePage = () => {
     const { buyerID, sellerID, conversationID } = useParams();
@@ -144,7 +143,7 @@ const MessagePage = () => {
 
     return(
         <div>
-            <Header/>
+            
             <div className = "messages-container">
                 <div className = "conversations-list">
                     <h3>Your Conversations</h3>
