@@ -137,7 +137,8 @@ const MessagePage = () => {
     }
 
     if(!currentUserID){
-        return<p>Please log in to view your messages.</p>;
+        navigate("/");
+        alert("Please log in to view messages!");
     }
     
 
