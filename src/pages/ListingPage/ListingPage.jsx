@@ -1,6 +1,7 @@
 import "./ListingPage.css";
 import { useState, useEffect } from "react";
 import { auth, db, storage } from "../../configuration/firebase-config.js";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   ref as dbRef,
   push,
@@ -28,6 +29,19 @@ const ListingPage = () => {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [currentUserID, setCurrentUserID] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserID(user.uid);
+      } else {
+        setCurrentUserID(null);
+      }
+    });
+
+    return () => unsubscribe;
+  }, []);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -39,7 +53,14 @@ const ListingPage = () => {
           setListings(items);
         }
       } catch (error) {
-        alert("Failed to fetch listings" + error);
+        if (!currentUserID) {
+          navigate("/");
+          setTimeout(() => {
+            alert("Please log in to view listings!");
+          }, 100);
+        } else {
+          alert("Failed to fetch listings" + error);
+        }
       }
     };
 
@@ -160,7 +181,6 @@ const ListingPage = () => {
 
   return (
     <div>
-      
       <div className="listing-container">
         <div>
           <h2>Listings</h2>
