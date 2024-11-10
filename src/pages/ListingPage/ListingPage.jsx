@@ -1,5 +1,4 @@
 import "./ListingPage.css";
-import Header from "../../components/Header/Header";
 import { useState, useEffect } from "react";
 import { auth, db, storage } from "../../configuration/firebase-config.js";
 import {
