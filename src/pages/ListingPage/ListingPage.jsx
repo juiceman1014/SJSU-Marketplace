@@ -21,6 +21,8 @@ import { useNavigate } from "react-router-dom";
 
 const ListingPage = () => {
   const [listings, setListings] = useState([]);
+  const [filteredListings, setFilteredListings] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -51,6 +53,7 @@ const ListingPage = () => {
         if (snapshot.exists()) {
           const items = Object.values(snapshot.val());
           setListings(items);
+          setFilteredListings(items);
         }
       } catch (error) {
         if (!currentUserID) {
@@ -66,6 +69,17 @@ const ListingPage = () => {
 
     fetchListings();
   }, [listings]);
+
+  useEffect(() => {
+    if(searchInput.trim() === ""){
+      setFilteredListings(listings);
+    }else{
+      const filtered = listings.filter((item) => 
+        item.title.toLowerCase().includes(searchInput.toLowerCase())
+     );
+     setFilteredListings(filtered);
+    }
+  }, [searchInput, listings]);
 
   const navigate = useNavigate();
 
