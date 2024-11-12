@@ -195,13 +195,21 @@ const ListingPage = () => {
 
   return (
     <div>
+      <div className = "filter-options">
+          <input
+          type = "text"
+          placeholder="Search for items here"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          />
+       </div>
       <div className="listing-container">
         <div>
           <h2>Listings</h2>
           <button onClick={openModal}>Click here to start listing!</button>
 
           <div className="item-list">
-            {listings.map((item, index) => (
+            {filteredListings.map((item, index) => (
               <div key={index} className="item">
                 <h3>{item.title}</h3>
                 {item.imageUrl && (
