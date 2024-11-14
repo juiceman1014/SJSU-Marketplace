@@ -36,6 +36,11 @@ const ListingPage = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        if(!user.emailVerified){
+          navigate("/");
+          alert("Your email must be verified to access this page!");
+          return;
+      }
         setCurrentUserID(user.uid);
       } else {
         setCurrentUserID(null);
