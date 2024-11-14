@@ -1,5 +1,5 @@
 import "./RegisterPage.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { auth } from "../../configuration/firebase-config.js";
 import {
@@ -7,11 +7,11 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 
-import Header from "../../components/Header/Header";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -32,6 +32,7 @@ const RegisterPage = () => {
       await sendEmailVerification(user);
 
       alert("Successfully registered! Please verify your email address!");
+      navigate("/login")
     } catch (error) {
       alert(`Error encountered: ${error.message}`);
     }
