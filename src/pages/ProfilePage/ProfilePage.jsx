@@ -2,6 +2,7 @@ import "./ProfilePage.css";
 import { useState } from "react";
 import { auth, db } from "../../configuration/firebase-config.js";
 import { ref, update } from "firebase/database";
+import { Link } from "react-router-dom";
 
 const ProfilePage = () => {
   const [username, setUsername] = useState("");
@@ -33,7 +34,8 @@ const ProfilePage = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           ></input>
-          <button type="submit">Update</button>
+          <button type="submit">Update Username</button>
+          <button><Link to="/password">Reset Password</Link></button>
         </form>
       </div>
     </div>
