@@ -2,11 +2,12 @@ import "./LoginPage.css";
 import { useState } from "react";
 import { auth } from "../../configuration/firebase-config.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,7 +17,8 @@ const LoginPage = () => {
       const user = userInfo.user;
 
       if (user.emailVerified) {
-        alert("Login successful!");
+        alert("Login successful! Now redirecting you to listings page!");
+        navigate("/listing");
       } else {
         alert("Please verify your email before logging in!");
         auth.signOut();
