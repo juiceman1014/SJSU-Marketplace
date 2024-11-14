@@ -1,7 +1,7 @@
 import "./LoginPage.css";
 import { useState } from "react";
 import { auth } from "../../configuration/firebase-config.js";
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from "react-router-dom";
 
 const LoginPage = () => {
