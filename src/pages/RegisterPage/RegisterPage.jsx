@@ -11,6 +11,7 @@ import {
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -18,6 +19,11 @@ const RegisterPage = () => {
 
     if (!email.endsWith("@sjsu.edu")) {
       alert("Email must end with @sjsu.edu");
+      return;
+    }
+
+    if(password !== confirmPassword){
+      alert("Passwords do not match!");
       return;
     }
 
@@ -63,6 +69,17 @@ const RegisterPage = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+              ></input>
+            </div>
+
+            <div className="register-form__input">
+              <label htmlFor="password">Password:</label>
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               ></input>
             </div>
