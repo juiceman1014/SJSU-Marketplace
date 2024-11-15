@@ -23,6 +23,7 @@ const ListingPage = () => {
   const [listings, setListings] = useState([]);
   const [filteredListings, setFilteredListings] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -36,11 +37,11 @@ const ListingPage = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        if(!user.emailVerified){
+        if (!user.emailVerified) {
           navigate("/");
           alert("Your email must be verified to access this page!");
           return;
-      }
+        }
         setCurrentUserID(user.uid);
       } else {
         setCurrentUserID(null);
@@ -76,15 +77,20 @@ const ListingPage = () => {
   }, [listings]);
 
   useEffect(() => {
-    if(searchInput.trim() === ""){
-      setFilteredListings(listings);
-    }else{
-      const filtered = listings.filter((item) => 
+    let filtered = listings;
+
+    if (searchInput.trim() !== "") {
+      filtered = filtered.filter((item) =>
         item.title.toLowerCase().includes(searchInput.toLowerCase())
-     );
-     setFilteredListings(filtered);
+      );
     }
-  }, [searchInput, listings]);
+
+    if (selectedCategory !== "") {
+      filtered = filtered.filter((item) => item.category === selectedCategory);
+    }
+
+    setFilteredListings(filtered);
+  }, [searchInput, listings, selectedCategory]);
 
   const navigate = useNavigate();
 
@@ -200,14 +206,24 @@ const ListingPage = () => {
 
   return (
     <div>
-      <div className = "filter-options">
-          <input
-          type = "text"
+      <div className="filter-options">
+        <input
+          type="text"
           placeholder="Search for items here"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          />
-       </div>
+        />
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">All categories</option>
+          <option value="School Supplies">School Supplies</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Technology">Technology</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
       <div className="listing-container">
         <div>
           <h2>Listings</h2>
