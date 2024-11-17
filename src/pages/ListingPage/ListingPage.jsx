@@ -25,6 +25,8 @@ const ListingPage = () => {
   const [searchInput, setSearchInput] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentEditID, setCurrentEditID] = useState(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
@@ -124,7 +126,26 @@ const ListingPage = () => {
     navigate(`/message/${buyerID}/${sellerID}/${conversationID}`);
   };
 
-  const openModal = () => {
+  const openModal = (listing = null) => {
+    if(listing){
+      setIsEditing(true);
+      setCurrentEditID(listing.ID);
+      setTitle(listing.title);
+      setCategory(listing.category);
+      setCondition(listing.condition);
+      setDescription(listing.description);
+      setPrice(listing.price);
+      setImage(null);
+    }else{
+      setIsEditing(false);
+      setCurrentEditID(null);
+      setTitle("");
+      setCategory("");
+      setCondition("");
+      setDescription("");
+      setPrice("");
+      setImage(null);
+    }
     setModalIsOpen(true);
   };
 
@@ -166,9 +187,9 @@ const ListingPage = () => {
       }
 
       const itemRef = dbRef(db, "items");
-      const newItemRef = await push(itemRef);
+      
       const newItem = {
-        ID: newItemRef.key,
+        ID: currentEditID || (await push(itemRef)).key,
         userID,
         userName,
         imageUrl,
@@ -176,14 +197,24 @@ const ListingPage = () => {
         category,
         condition,
         description,
-        price,
+        price
       };
 
-      await set(newItemRef, newItem);
-
-      setListings((prevListings) => [...prevListings, newItem]);
+      if(isEditing){
+        const existingItemRef = dbRef(db, `items/${currentEditID}`);
+        await set(existingItemRef, newItem);
+        setListings((prevListings) => 
+          prevListings.map((item) => 
+            item.ID === newItem.ID ? newItem : item
+          )
+        );
+      }else{
+        const newItemRef = dbRef(db, `items/${newItem.ID}`)
+        await set(newItemRef, newItem);
+        setListings((prevListings) => [...prevListings,newItem]);
+      }
       closeModal();
-      alert("Item listed successfully!");
+      alert(isEditing ? "Item updated successfully!" : "Item listed successfully!");
     } catch (error) {
       alert("Failed to list item: " + error);
     } finally {
@@ -227,7 +258,7 @@ const ListingPage = () => {
       <div className="listing-container">
         <div>
           <h2>Listings</h2>
-          <button onClick={openModal}>Click here to start listing!</button>
+          <button onClick={() => openModal()}>Click here to start listing!</button>
 
           <div className="item-list">
             {filteredListings.map((item, index) => (
@@ -242,9 +273,12 @@ const ListingPage = () => {
                 <p>Price: {item.price}</p>
                 <p>Seller: {item.userName}</p>
                 {item.userID === auth.currentUser.uid ? (
+                <>
+                  <button onClick={() => openModal(item)}>Edit</button>
                   <button onClick={() => handleDeleteListing(item.ID)}>
                     Delete Listing
                   </button>
+                </>
                 ) : (
                   <button onClick={() => navigateToMessagePage(item.userID)}>
                     Contact Seller
@@ -259,7 +293,7 @@ const ListingPage = () => {
             onRequestClose={closeModal}
             className="modal-content"
           >
-            <h2>Create your listing here!</h2>
+            <h2>{isEditing ? "Edit your listing" : "Create your listing"}</h2>
 
             <form onSubmit={handleSubmit}>
               <input
@@ -306,6 +340,7 @@ const ListingPage = () => {
                 type="file"
                 accept="image/*"
                 onChange={(e) => setImage(e.target.files[0])}
+                required
               ></input>
               <button type="submit" disabled={uploading}>
                 {uploading ? "Uploading..." : "Submit"}
