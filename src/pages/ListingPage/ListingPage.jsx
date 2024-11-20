@@ -151,7 +151,7 @@ const ListingPage = () => {
       const itemRef = dbRef(db, `items/${itemID}`);
       await remove(itemRef);
       setListings((prevListings) =>
-        prevListings.filter((item) => item.id !== itemID)
+        prevListings.filter((item) => item.ID !== itemID)
       );
       alert("Listing deleted successfully!");
     } catch (error) {
@@ -160,101 +160,136 @@ const ListingPage = () => {
   };
 
   return (
-    <div>
-      
-      <div className="listing-container">
-        <div>
-          <h2>Listings</h2>
-          <button onClick={openModal}>Click here to start listing!</button>
+    <div className="listing-container">
+      <h2>Listings</h2>
+      <button onClick={openModal}>Click here to start listing!</button>
 
-          <div className="item-list">
-            {listings.map((item, index) => (
-              <div key={index} className="item">
-                <h3>{item.title}</h3>
-                {item.imageUrl && (
-                  <img src={item.imageUrl} className="listing-image"></img>
-                )}
-                <p>Category: {item.category}</p>
-                <p>Condition: {item.condition}</p>
-                <p>Description: {item.description}</p>
-                <p>Price: {item.price}</p>
-                <p>Seller: {item.userName}</p>
-                {item.userID === auth.currentUser.uid ? (
-                  <button onClick={() => handleDeleteListing(item.ID)}>
-                    Delete Listing
-                  </button>
-                ) : (
-                  <button onClick={() => navigateToMessagePage(item.userID)}>
-                    Contact Seller
-                  </button>
-                )}
-              </div>
-            ))}
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        required
+      >
+        <option value="" disabled>
+          Select Category
+        </option>
+        <option value="School Supplies">School Supplies</option>
+        <option value="Furniture">Furniture</option>
+        <option value="Technology">Technology</option>
+        <option value="Other">Other</option>
+      </select>
+      <select
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+        required
+      >
+        <option value="" disabled>
+          Select Price
+        </option>
+        <option value="Single">$</option>
+        <option value="Double">$$</option>
+        <option value="Triple">$$$</option>
+        <option value="Other Price">Other</option>
+      </select>
+      <select
+        value={condition}
+        onChange={(e) => setCondition(e.target.value)}
+        required
+      >
+        <option value="" disabled>
+          Select Condition
+        </option>
+        <option value="New">New</option>
+        <option value="Used">Used</option>
+        <option value="Refurbished">Refurbished</option>
+        <option value="Acceptable">Acceptable</option>
+      </select>
+
+      <div className="item-list">
+        {listings.map((item, index) => (
+          <div key={index} className="item">
+            <h3>{item.title}</h3>
+            {item.imageUrl && (
+              <img src={item.imageUrl} alt={item.title} className="listing-image" />
+            )}
+            <p>Category: {item.category}</p>
+            <p>Condition: {item.condition}</p>
+            <p>Description: {item.description}</p>
+            <p>Price: {item.price}</p>
+            <p>Seller: {item.userName}</p>
+            {item.userID === auth.currentUser.uid ? (
+              <button onClick={() => handleDeleteListing(item.ID)}>
+                Delete Listing
+              </button>
+            ) : (
+              <button onClick={() => navigateToMessagePage(item.userID)}>
+                Contact Seller
+              </button>
+            )}
           </div>
-
-          <Modal
-            isOpen={modalIsOpen}
-            onRequestClose={closeModal}
-            className="modal-content"
-          >
-            <h2>Create your listing here!</h2>
-
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                placeholder="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              ></input>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Select Category
-                </option>
-                <option value="School Supplies">School Supplies</option>
-                <option value="Furniture">Furniture</option>
-                <option value="Technology">Technology</option>
-                <option value="Other">Other</option>
-              </select>
-              <input
-                type="text"
-                placeholder="condition"
-                value={condition}
-                onChange={(e) => setCondition(e.target.value)}
-                required
-              ></input>
-              <textarea
-                placeholder="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              ></textarea>
-              <input
-                type="number"
-                placeholder="Listed Price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                required
-              ></input>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImage(e.target.files[0])}
-              ></input>
-              <button type="submit" disabled={uploading}>
-                {uploading ? "Uploading..." : "Submit"}
-              </button>
-              <button type="button" onClick={closeModal}>
-                Cancel
-              </button>
-            </form>
-          </Modal>
-        </div>
+        ))}
       </div>
+
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        className="modal-content"
+      >
+        <h2>Create your listing here!</h2>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              Select Category
+            </option>
+            <option value="School Supplies">School Supplies</option>
+            <option value="Furniture">Furniture</option>
+            <option value="Technology">Technology</option>
+            <option value="Other">Other</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Condition"
+            value={condition}
+            onChange={(e) => setCondition(e.target.value)}
+            required
+          />
+          <textarea
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+          <input
+            type="number"
+            placeholder="Listed Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
+          />
+          <button type="submit" disabled={uploading}>
+            {uploading ? "Uploading..." : "Submit"}
+          </button>
+          <button type="button" onClick={closeModal}>
+            Cancel
+          </button>
+        </form>
+      </Modal>
     </div>
   );
 };
