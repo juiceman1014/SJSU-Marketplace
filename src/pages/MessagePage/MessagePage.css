@@ -1,7 +1,150 @@
-.message-container{
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.messages-container {
+  display: flex;
+  height: 100vh;
+}
+
+.conversations-list {
+  width: 25%;
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.conversations-list h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.conversations-list div {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.conversations-list div:hover {
+  background-color: #f0f0f0;
+}
+
+.conversations-list p {
+  margin: 0;
+  color: #555;
+}
+
+.conversations-list h3 {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.conversation-messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  padding: 10px;
+}
+
+.conversation-messages h3{
+    font-weight:bold;
+    font-size:1.5rem;
+}
+
+.messages-list {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-incoming,
+.message-outgoing {
+  max-width: 60%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  word-wrap: break-word;
+}
+
+.message-incoming {
+  background-color: #f1c40f;
+  align-self: flex-start;
+  color: #333;
+}
+
+.message-outgoing {
+  background-color: #0074cc;
+  align-self: flex-end;
+  color: #fff;
+}
+
+.message-form {
+  display: flex;
+  border-top: 1px solid #ddd;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
+
+.message-form input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.message-form button {
+  padding: 10px 20px;
+  background-color: #0074cc;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.message-form button:hover {
+  background-color: #005bb5;
+}
+
+/* Scrollbars */
+.conversations-list::-webkit-scrollbar,
+.messages-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.conversations-list::-webkit-scrollbar-thumb,
+.messages-list::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.conversations-list::-webkit-scrollbar-thumb:hover,
+.messages-list::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+}
+
+.general-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  padding-left: 25%;
+  padding: bottom 25%;
+}
+
+.general-message img {
+  max-width: 400px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.general-message p {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #555;
 }

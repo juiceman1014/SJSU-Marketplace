@@ -3,11 +3,12 @@ import { useState } from "react";
 import { auth } from "../../configuration/firebase-config.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Header from "../../components/Header/Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,6 +19,7 @@ const LoginPage = () => {
 
       if (user.emailVerified) {
         alert("Login successful!");
+        navigate("/");
       } else {
         alert("Please verify your email before logging in!");
         auth.signOut();
@@ -61,14 +63,12 @@ const LoginPage = () => {
             <Link to="/register" className="login-form__link">
               Don't have an account? <span>Sign up</span>
             </Link>
-            
+
             <Link to="/password" className="login-form__link">
               <span>Forgot your password? </span>
             </Link>
-
           </form>
         </div>
-
       </div>
     </div>
   );

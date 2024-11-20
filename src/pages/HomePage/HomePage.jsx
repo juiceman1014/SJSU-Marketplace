@@ -2,6 +2,7 @@
 import './HomePage.css';
 import { Link } from 'react-router-dom';
 
+
 const HomePage = () => {
     return (
         <div className="home-container">
@@ -21,8 +22,10 @@ const HomePage = () => {
                 <button className="sign-up-button">Sign Up Now</button>
                 </Link>
                 </div>
-                <div className="image-placeholder"></div>
-
+                <div className="image">
+                    <img src = "/images/SJSU.png" alt="Description"></img>
+                </div>
+                    
             </div>
         </div>
     );
