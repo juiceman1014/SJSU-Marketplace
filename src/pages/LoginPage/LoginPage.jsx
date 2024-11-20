@@ -62,14 +62,12 @@ const LoginPage = () => {
             <Link to="/register" className="login-form__link">
               Don't have an account? <span>Sign up</span>
             </Link>
-            
+
             <Link to="/password" className="login-form__link">
               <span>Forgot your password? </span>
             </Link>
-
           </form>
         </div>
-
       </div>
     </div>
   );
