@@ -60,8 +60,10 @@ const ListingPage = () => {
         const snapshot = await get(itemsRef);
         if (snapshot.exists()) {
           const items = Object.values(snapshot.val());
-          setListings(items);
-          setFilteredListings(items);
+
+          const reversedItems = items.reverse();
+          setListings(reversedItems);
+          setFilteredListings(reversedItems);
         }
       } catch (error) {
         if (!currentUserID) {
@@ -198,6 +200,7 @@ const ListingPage = () => {
         condition,
         description,
         price,
+        timestamp: Date.now(),
       };
 
       if (isEditing) {
@@ -235,6 +238,15 @@ const ListingPage = () => {
     }
   };
 
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    return `${month}/${day}/${year}`;
+  };
+
   return (
     <div>
       <div className="filter-options">
@@ -266,6 +278,7 @@ const ListingPage = () => {
             {filteredListings.map((item, index) => (
               <div key={index} className="item">
                 <h3>{item.title}</h3>
+                <p>Date: {formatDate(item.timestamp)}</p>
                 {item.imageUrl && (
                   <img src={item.imageUrl} className="listing-image"></img>
                 )}
