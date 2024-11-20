@@ -190,7 +190,7 @@ const ListingPage = () => {
 
       const itemRef = dbRef(db, "items");
 
-      const newItem = {
+      let newItem = {
         ID: currentEditID || (await push(itemRef)).key,
         userID,
         userName,
@@ -200,16 +200,28 @@ const ListingPage = () => {
         condition,
         description,
         price,
-        timestamp: Date.now(),
       };
 
       if (isEditing) {
         const existingItemRef = dbRef(db, `items/${currentEditID}`);
+        const snapshot = await get(existingItemRef);
+
+        if(snapshot.exists()){
+          const existingData = snapshot.val();
+          newItem = {
+            ...existingData,
+            ...newItem,
+          };
+        }
         await set(existingItemRef, newItem);
         setListings((prevListings) =>
           prevListings.map((item) => (item.ID === newItem.ID ? newItem : item))
         );
       } else {
+        newItem = {
+          ...newItem,
+          timestamp: Date.now(),
+        };
         const newItemRef = dbRef(db, `items/${newItem.ID}`);
         await set(newItemRef, newItem);
         setListings((prevListings) => [...prevListings, newItem]);
