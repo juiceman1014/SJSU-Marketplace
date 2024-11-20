@@ -1,7 +1,7 @@
 import "./ListingPage.css";
-import Header from "../../components/Header/Header";
 import { useState, useEffect } from "react";
 import { auth, db, storage } from "../../configuration/firebase-config.js";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   ref as dbRef,
   push,
@@ -21,7 +21,12 @@ import { useNavigate } from "react-router-dom";
 
 const ListingPage = () => {
   const [listings, setListings] = useState([]);
+  const [filteredListings, setFilteredListings] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentEditID, setCurrentEditID] = useState(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
@@ -29,6 +34,24 @@ const ListingPage = () => {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [currentUserID, setCurrentUserID] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (!user.emailVerified) {
+          navigate("/");
+          alert("Your email must be verified to access this page!");
+          return;
+        }
+        setCurrentUserID(user.uid);
+      } else {
+        setCurrentUserID(null);
+      }
+    });
+
+    return () => unsubscribe;
+  }, []);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -38,14 +61,38 @@ const ListingPage = () => {
         if (snapshot.exists()) {
           const items = Object.values(snapshot.val());
           setListings(items);
+          setFilteredListings(items);
         }
       } catch (error) {
-        alert("Failed to fetch listings" + error);
+        if (!currentUserID) {
+          navigate("/");
+          setTimeout(() => {
+            alert("Please log in to view listings!");
+          }, 100);
+        } else {
+          alert("Failed to fetch listings" + error);
+        }
       }
     };
 
     fetchListings();
   }, [listings]);
+
+  useEffect(() => {
+    let filtered = listings;
+
+    if (searchInput.trim() !== "") {
+      filtered = filtered.filter((item) =>
+        item.title.toLowerCase().includes(searchInput.toLowerCase())
+      );
+    }
+
+    if (selectedCategory !== "") {
+      filtered = filtered.filter((item) => item.category === selectedCategory);
+    }
+
+    setFilteredListings(filtered);
+  }, [searchInput, listings, selectedCategory]);
 
   const navigate = useNavigate();
 
@@ -79,7 +126,26 @@ const ListingPage = () => {
     navigate(`/message/${buyerID}/${sellerID}/${conversationID}`);
   };
 
-  const openModal = () => {
+  const openModal = (listing = null) => {
+    if(listing){
+      setIsEditing(true);
+      setCurrentEditID(listing.ID);
+      setTitle(listing.title);
+      setCategory(listing.category);
+      setCondition(listing.condition);
+      setDescription(listing.description);
+      setPrice(listing.price);
+      setImage(null);
+    }else{
+      setIsEditing(false);
+      setCurrentEditID(null);
+      setTitle("");
+      setCategory("");
+      setCondition("");
+      setDescription("");
+      setPrice("");
+      setImage(null);
+    }
     setModalIsOpen(true);
   };
 
@@ -121,9 +187,9 @@ const ListingPage = () => {
       }
 
       const itemRef = dbRef(db, "items");
-      const newItemRef = await push(itemRef);
+      
       const newItem = {
-        ID: newItemRef.key,
+        ID: currentEditID || (await push(itemRef)).key,
         userID,
         userName,
         imageUrl,
@@ -131,14 +197,24 @@ const ListingPage = () => {
         category,
         condition,
         description,
-        price,
+        price
       };
 
-      await set(newItemRef, newItem);
-
-      setListings((prevListings) => [...prevListings, newItem]);
+      if(isEditing){
+        const existingItemRef = dbRef(db, `items/${currentEditID}`);
+        await set(existingItemRef, newItem);
+        setListings((prevListings) => 
+          prevListings.map((item) => 
+            item.ID === newItem.ID ? newItem : item
+          )
+        );
+      }else{
+        const newItemRef = dbRef(db, `items/${newItem.ID}`)
+        await set(newItemRef, newItem);
+        setListings((prevListings) => [...prevListings,newItem]);
+      }
       closeModal();
-      alert("Item listed successfully!");
+      alert(isEditing ? "Item updated successfully!" : "Item listed successfully!");
     } catch (error) {
       alert("Failed to list item: " + error);
     } finally {
@@ -160,65 +236,115 @@ const ListingPage = () => {
   };
 
   return (
-    <div className="listing-container">
-      <h2>Listings</h2>
-      <button onClick={openModal}>Click here to start listing!</button>
 
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        required
-      >
-        <option value="" disabled>
-          Select Category
-        </option>
-        <option value="School Supplies">School Supplies</option>
-        <option value="Furniture">Furniture</option>
-        <option value="Technology">Technology</option>
-        <option value="Other">Other</option>
-      </select>
-      <select
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
-        required
-      >
-        <option value="" disabled>
-          Select Price
-        </option>
-        <option value="Single">$</option>
-        <option value="Double">$$</option>
-        <option value="Triple">$$$</option>
-        <option value="Other Price">Other</option>
-      </select>
-      <select
-        value={condition}
-        onChange={(e) => setCondition(e.target.value)}
-        required
-      >
-        <option value="" disabled>
-          Select Condition
-        </option>
-        <option value="New">New</option>
-        <option value="Used">Used</option>
-        <option value="Refurbished">Refurbished</option>
-        <option value="Acceptable">Acceptable</option>
-      </select>
+    <div>
+      <div className="filter-options">
+        <input
+          type="text"
+          placeholder="Search for items here"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">All categories</option>
+          <option value="School Supplies">School Supplies</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Technology">Technology</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div className="listing-container">
+        <div>
+          <h2>Listings</h2>
+          <button onClick={() => openModal()}>Click here to start listing!</button>
 
-      <div className="item-list">
-        {listings.map((item, index) => (
-          <div key={index} className="item">
-            <h3>{item.title}</h3>
-            {item.imageUrl && (
-              <img src={item.imageUrl} alt={item.title} className="listing-image" />
-            )}
-            <p>Category: {item.category}</p>
-            <p>Condition: {item.condition}</p>
-            <p>Description: {item.description}</p>
-            <p>Price: {item.price}</p>
-            <p>Seller: {item.userName}</p>
-            {item.userID === auth.currentUser.uid ? (
-              <button onClick={() => handleDeleteListing(item.ID)}>
-                Delete Listing
+          <div className="item-list">
+            {filteredListings.map((item, index) => (
+              <div key={index} className="item">
+                <h3>{item.title}</h3>
+                {item.imageUrl && (
+                  <img src={item.imageUrl} className="listing-image"></img>
+                )}
+                <p>Category: {item.category}</p>
+                <p>Condition: {item.condition}</p>
+                <p>Description: {item.description}</p>
+                <p>Price: {item.price}</p>
+                <p>Seller: {item.userName}</p>
+                {item.userID === auth.currentUser.uid ? (
+                <>
+                  <button onClick={() => openModal(item)}>Edit</button>
+                  <button onClick={() => handleDeleteListing(item.ID)}>
+                    Delete Listing
+                  </button>
+                </>
+                ) : (
+                  <button onClick={() => navigateToMessagePage(item.userID)}>
+                    Contact Seller
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            className="modal-content"
+          >
+            <h2>{isEditing ? "Edit your listing" : "Create your listing"}</h2>
+
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              ></input>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                required
+              >
+                <option value="" disabled>
+                  Select Category
+                </option>
+                <option value="School Supplies">School Supplies</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Technology">Technology</option>
+                <option value="Other">Other</option>
+              </select>
+              <input
+                type="text"
+                placeholder="condition"
+                value={condition}
+                onChange={(e) => setCondition(e.target.value)}
+                required
+              ></input>
+              <textarea
+                placeholder="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+              ></textarea>
+              <input
+                type="number"
+                placeholder="Listed Price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                required
+              ></input>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImage(e.target.files[0])}
+                required
+              ></input>
+              <button type="submit" disabled={uploading}>
+                {uploading ? "Uploading..." : "Submit"}
               </button>
             ) : (
               <button onClick={() => navigateToMessagePage(item.userID)}>

@@ -146,6 +146,7 @@
       width: 90%;
     }
 
+
     .select-container {
       display: flex;
       gap: 20px; /* Space between dropdowns */
@@ -160,3 +161,16 @@
     }    
   }
   
+
+.modal-content form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100vh
+}
+
+.filter-options{
+    margin-top: 20px;
+}
+

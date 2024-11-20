@@ -1,8 +1,45 @@
 .title-link {
-    text-decoration:none;
-
-.header-parent-container{
-    display: flex;
-    justify-content: space-evenly;
-
+  text-decoration: none;
 }
+
+.title-link:hover {
+  text-decoration: underline;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-logged-in {
+  display: flex;
+}
+ 
+.nav-logged-in{
+    margin: 0 10px;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.nav-logged-in:hover{
+    text-decoration: underline;
+}
+
+.icon{
+    margin-right: 10px;
+}
+
+
+
+.logout-dropdown {
+    display: block;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    z-index: 1; 
+  }
+

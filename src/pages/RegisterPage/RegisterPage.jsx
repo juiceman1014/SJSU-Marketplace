@@ -1,5 +1,6 @@
 import "./RegisterPage.css";
-import { Link } from "react-router-dom";
+
+import { Link, useNavigate} from "react-router-dom";
 import { useState } from "react";
 import { auth } from "../../configuration/firebase-config.js";
 import {
@@ -7,17 +8,23 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 
-import Header from "../../components/Header/Header";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
     if (!email.endsWith("@sjsu.edu")) {
       alert("Email must end with @sjsu.edu");
+      return;
+    }
+
+    if(password !== confirmPassword){
+      alert("Passwords do not match!");
       return;
     }
 
@@ -32,6 +39,7 @@ const RegisterPage = () => {
       await sendEmailVerification(user);
 
       alert("Successfully registered! Please verify your email address!");
+      navigate("/login")
     } catch (error) {
       alert(`Error encountered: ${error.message}`);
     }
@@ -62,6 +70,17 @@ const RegisterPage = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+              ></input>
+            </div>
+
+            <div className="register-form__input">
+              <label htmlFor="password">Password:</label>
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               ></input>
             </div>

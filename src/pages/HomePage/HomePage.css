@@ -84,9 +84,12 @@
   max-width: 30%;
 }
 
-.image-placeholder {
+.image {
   width: 55%;
   height: 400px;
-  background-color: #ccc;
   border-radius: 4px;
+}
+
+.image img {
+  width: 725px;
 }

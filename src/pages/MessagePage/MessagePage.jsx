@@ -23,6 +23,11 @@ const MessagePage = () => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth,(user) => {
             if(user){
+                if(!user.emailVerified){
+                    navigate("/");
+                    alert("Your email must be verified to access this page!");
+                    return;
+                }
                 setCurrentUserID(user.uid);
 
                 const userRef = ref(db, `users/${user.uid}/username`);
@@ -137,7 +142,8 @@ const MessagePage = () => {
     }
 
     if(!currentUserID){
-        return<p>Please log in to view your messages.</p>;
+        navigate("/");
+        alert("Please log in to view messages!");
     }
     
 
@@ -146,17 +152,17 @@ const MessagePage = () => {
             
             <div className = "messages-container">
                 <div className = "conversations-list">
-                    <h3>Your Conversations</h3>
+                    <h3>Messages</h3>
                     {conversations.map((convoID) => (
                         <div key = {convoID} onClick = {() => handleConversationClick(convoID)}>
-                            <p>{`Conversation with ${conversationNames[convoID] || "Unknown User"}`}</p>
+                            <p>{`${conversationNames[convoID] || "Unknown User"}`}</p>
                         </div>
                     ))}
                 </div>
                 
                 {!isGeneralMessagePage && (
                 <div className = "conversation-messages">
-                    <h3>Conversation with {otherPersonName} </h3>
+                    <h3>{otherPersonName} </h3>
                     <div className = "messages-list">
                         {messages.map((msg, index) => (
                             <div key = {index} className = {msg.senderID === currentUserID ? "message-outgoing" : "message-incoming"}>
@@ -164,7 +170,7 @@ const MessagePage = () => {
                             </div>
                         ))}
                     </div>
-                    <form onSubmit = {handleSendMessage}>
+                    <form className="message-form" onSubmit = {handleSendMessage}>
                         <input type = "text" placeholder = "Typer your message..." value = {newMessage} onChange={(e) => setNewMessage(e.target.value)}/>
                         <button type = "submit">Send</button>
                     </form>
@@ -172,7 +178,10 @@ const MessagePage = () => {
                 )}
 
                 {isGeneralMessagePage && (
-                    <p>Select a conversation to get started!</p>
+                    <div className="general-message">
+                        <img src = "/images/SpartanLogo.png" alt="Description"></img>
+                        <p>Select a conversation to get started!</p>
+                  </div>
                 )} 
             </div>
         </div>
