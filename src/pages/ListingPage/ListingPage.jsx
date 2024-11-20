@@ -210,68 +210,84 @@ const ListingPage = () => {
               </div>
             ))}
           </div>
+            <Modal isOpen={modalIsOpen} onRequestClose={closeModal} className="modal-content">
+              <div className="modal-header">
+                <button className="close-button" onClick={closeModal}>&times;</button>
+              </div>
+              <form onSubmit={handleSubmit} className="styled-form">
+                <div className="form-group">
+                  <label className="form-label">Title</label>
+                  <input
+                    type="text"
+                    placeholder="Enter the item title ."
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  ></input>
+                </div>
 
-          <Modal
-            isOpen={modalIsOpen}
-            onRequestClose={closeModal}
-            className="modal-content"
-          >
-            <h2>Create your listing here!</h2>
+                <div className="form-group">
+                  <label className="form-label">Category</label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>Select Category</option>
+                    <option value="School Supplies">School Supplies</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
 
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                placeholder="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              ></input>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Select Category
-                </option>
-                <option value="School Supplies">School Supplies</option>
-                <option value="Furniture">Furniture</option>
-                <option value="Technology">Technology</option>
-                <option value="Other">Other</option>
-              </select>
-              <input
-                type="text"
-                placeholder="condition"
-                value={condition}
-                onChange={(e) => setCondition(e.target.value)}
-                required
-              ></input>
-              <textarea
-                placeholder="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              ></textarea>
-              <input
-                type="number"
-                placeholder="Listed Price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                required
-              ></input>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImage(e.target.files[0])}
-              ></input>
-              <button type="submit" disabled={uploading}>
-                {uploading ? "Uploading..." : "Submit"}
-              </button>
-              <button type="button" onClick={closeModal}>
-                Cancel
-              </button>
-            </form>
-          </Modal>
+                <div className="form-group">
+                  <label className="form-label">Upload Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImage(e.target.files[0])}
+                    className="file-input"
+                  ></input>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Description</label>
+                  <textarea
+                    placeholder="Provide a detailed description of the item."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                  ></textarea>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Item Condition</label>
+                  <input
+                    type="text"
+                    placeholder="Specify the item condition."
+                    value={condition}
+                    onChange={(e) => setCondition(e.target.value)}
+                    required
+                  ></input>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Price</label>
+                  <input
+                    type="number"
+                    placeholder="Enter the item price."
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                  ></input>
+                </div>
+
+                <button type="submit" disabled={uploading} className="submit-button">
+                  {uploading ? "Uploading..." : "Post"}
+                </button>
+              </form>
+            </Modal>
         </div>
       </div>
     </div>
