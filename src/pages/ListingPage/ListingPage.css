@@ -1,21 +1,166 @@
-.listing-container{
+/* General container for listings */
+.listing-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-}
-
-.listing-image{
+    padding: 20px;
+  }
+  
+  /* Title */
+  .listing-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  /* Button to open the modal */
+  .listing-container button {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .listing-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Flexbox for displaying items */
+  .item-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+    gap: 20px; /* Space between items */
+    margin-top: 20px;
+    width: 100%;
+    max-width: 1200px;
+  }
+  
+  /* Individual item block */
+  .item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Hover effect for item block */
+  .item:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Listing image styles */
+  .listing-image {
     height: 150px;
     width: auto;
-}
-
-.modal-content h2{
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  /* Select inputs */
+  select, input[type="text"], input[type="number"], textarea {
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  textarea {
+    height: 100px;
+    resize: none;
+  }
+  
+  /* Modal styles */
+  .modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 100%;
+    margin: auto;
+  }
+  
+  .modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .modal-content form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-}
+    justify-content: flex-start;
+  }
+  
+  .modal-content input[type="file"] {
+    margin-top: 10px;
+  }
+  
+  /* Modal buttons */
+  .modal-content button {
+    padding: 10px 20px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .modal-content button:hover {
+    background-color: #45a049;
+  }
+  
+  .modal-content button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1200px) {
+    .item-list {
+      grid-template-columns: repeat(3, 1fr); /* 3 items per row on medium screens */
+    }
+  }
+  
+  @media (max-width: 800px) {
+    .item-list {
+      grid-template-columns: repeat(2, 1fr); /* 2 items per row on smaller screens */
+    }
+  }
+  
+  @media (max-width: 500px) {
+    .item-list {
+      grid-template-columns: 1fr; /* 1 item per row on very small screens */
+    }
+  
+    .modal-content form {
+      width: 90%;
+    }
+
+
+    .select-container {
+      display: flex;
+      gap: 20px; /* Space between dropdowns */
+      justify-content: center; /* Center the dropdowns horizontally */
+      margin-bottom: 20px; /* Space below the container */
+    }
+    
+    .select-container select {
+      width: auto;
+      flex: 1; /* Optional: Makes all dropdowns equal width */
+      max-width: 200px; /* Ensures dropdowns are not too wide */
+    }    
+  }
+  
 
 .modal-content form{
     display: flex;
@@ -28,3 +173,4 @@
 .filter-options{
     margin-top: 20px;
 }
+
