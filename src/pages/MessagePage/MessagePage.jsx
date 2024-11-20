@@ -23,6 +23,11 @@ const MessagePage = () => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth,(user) => {
             if(user){
+                if(!user.emailVerified){
+                    navigate("/");
+                    alert("Your email must be verified to access this page!");
+                    return;
+                }
                 setCurrentUserID(user.uid);
 
                 const userRef = ref(db, `users/${user.uid}/username`);
@@ -137,7 +142,8 @@ const MessagePage = () => {
     }
 
     if(!currentUserID){
-        return<p>Please log in to view your messages.</p>;
+        navigate("/");
+        alert("Please log in to view messages!");
     }
     
 

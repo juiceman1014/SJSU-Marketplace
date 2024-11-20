@@ -2,7 +2,6 @@ import "./LoginPage.css";
 import { useState } from "react";
 import { auth } from "../../configuration/firebase-config.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import Header from "../../components/Header/Header";
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -18,8 +17,8 @@ const LoginPage = () => {
       const user = userInfo.user;
 
       if (user.emailVerified) {
-        alert("Login successful!");
-        navigate("/");
+        alert("Login successful! Now redirecting you to listings page!");
+        navigate("/listing");
       } else {
         alert("Please verify your email before logging in!");
         auth.signOut();
