@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db, auth } from "../../configuration/firebase-config";
 import { ref, onValue, push, update, get} from "firebase/database";
@@ -16,6 +16,7 @@ const MessagePage = () => {
     const [ otherPersonName, setOtherPersonName ] = useState("");
     const [ currentUserName, setCurrentUsername ] = useState("");
     const navigate = useNavigate();
+    const messagesEndRef = useRef(null);
 
     const isGeneralMessagePage = !buyerID || !sellerID || !conversationID;
     const otherPersonID = currentUserID === buyerID ? sellerID : buyerID;
@@ -112,6 +113,10 @@ const MessagePage = () => {
         return () => unsubscribe();
 
     }, [conversationID, currentUserName, otherPersonName, currentUserID]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
     
     const handleSendMessage = async (e) => {
         e.preventDefault();
@@ -135,6 +140,10 @@ const MessagePage = () => {
             const sellerID = participants[1];
             navigate(`/message/${buyerID}/${sellerID}/${convoID}`);
         }
+    };
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
     };
 
     if(loading){
@@ -169,9 +178,10 @@ const MessagePage = () => {
                                 <p> <strong>{msg.senderName}:</strong> {msg.message}</p>
                             </div>
                         ))}
+                        <div ref={messagesEndRef}/>
                     </div>
                     <form className="message-form" onSubmit = {handleSendMessage}>
-                        <input type = "text" placeholder = "Typer your message..." value = {newMessage} onChange={(e) => setNewMessage(e.target.value)}/>
+                        <input type = "text" placeholder = "Type your message..." value = {newMessage} onChange={(e) => setNewMessage(e.target.value)}/>
                         <button type = "submit">Send</button>
                     </form>
                 </div> 
