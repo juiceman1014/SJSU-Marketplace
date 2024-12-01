@@ -17,6 +17,10 @@ const ProfilePage = () => {
           alert("Your email must be verified to access this page!");
           return;
         }
+      }else{
+        navigate("/");
+        alert("You must be logged in to access this page!");
+        return;
       }
     });
 
