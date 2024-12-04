@@ -18,18 +18,17 @@ const PasswordPage = () => {
   }
 
   return (
-    <div>
-      <div className="password-reset-container">
-        <header>Password Reset</header>
-
+    <div className="password-reset-container">
+      <div className="password-reset-form__box">
+        <h1 className="password-reset-form__title">Password Reset</h1>
         <form className="password-reset-form" onSubmit={handlePasswordReset}>
           <input
             type="email"
-            placeholder="Email Address"
+            placeholder="Enter Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-          ></input>
+          />
           <button type="submit">Reset</button>
         </form>
       </div>
