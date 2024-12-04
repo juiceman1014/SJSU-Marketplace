@@ -20,7 +20,7 @@ const LoginPage = () => {
         alert("Login successful! Now redirecting you to listings page!");
         navigate("/listing");
       } else {
-        alert("Please verify your email before to access all features!");
+        alert("Please verify your email to access all features!");
         navigate("/");
       }
     } catch (error) {
