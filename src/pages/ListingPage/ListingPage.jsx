@@ -41,7 +41,7 @@ const ListingPage = () => {
       if (user) {
         if (!user.emailVerified) {
           navigate("/");
-          alert("Your email must be verified to access this page!");
+          alert("Your email must be verified to access the listings!");
           return;
         }
         setCurrentUserID(user.uid);

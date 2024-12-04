@@ -26,7 +26,7 @@ const MessagePage = () => {
             if(user){
                 if(!user.emailVerified){
                     navigate("/");
-                    alert("Your email must be verified to access this page!");
+                    alert("Your email must be verified to access messages!");
                     return;
                 }
                 setCurrentUserID(user.uid);
