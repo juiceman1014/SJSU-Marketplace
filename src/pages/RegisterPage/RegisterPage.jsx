@@ -38,8 +38,8 @@ const RegisterPage = () => {
 
       await sendEmailVerification(user);
 
-      alert("Successfully registered! Please verify your email address!");
-      navigate("/login")
+      alert("Successfully registered! Please verify your email address before proceeding!");
+      navigate("/")
     } catch (error) {
       alert(`Error encountered: ${error.message}`);
     }
@@ -75,7 +75,7 @@ const RegisterPage = () => {
             </div>
 
             <div className="register-form__input">
-              <label htmlFor="password">Password:</label>
+              <label htmlFor="password">Confirm Password:</label>
               <input
                 type="password"
                 placeholder="Confirm Password"
