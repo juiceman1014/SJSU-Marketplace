@@ -60,7 +60,7 @@ const Header = () => {
 
           {user ? (
             <div className="nav-logged-in">
-              <p onClick={toggleLogout} className="icon">Hi, {username}</p>
+              <p onClick={toggleLogout} className="icon">Hi, {username || "Anonymous"}</p>
               {showLogout && (
                 <button onClick={handleLogout} className="logout-dropdown">
                   Logout
