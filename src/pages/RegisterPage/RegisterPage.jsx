@@ -38,7 +38,7 @@ const RegisterPage = () => {
 
       await sendEmailVerification(user);
 
-      alert("Successfully registered! Please verify your email address before proceeding!");
+      alert("Successfully registered! Please verify your email address to access all features!");
       navigate("/")
     } catch (error) {
       alert(`Error encountered: ${error.message}`);
