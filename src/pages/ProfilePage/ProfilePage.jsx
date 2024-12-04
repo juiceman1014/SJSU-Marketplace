@@ -54,6 +54,7 @@ const ProfilePage = () => {
             placeholder="Enter New Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
         <button className="profile-form__submit" type="submit">
