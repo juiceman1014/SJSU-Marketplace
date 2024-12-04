@@ -31,9 +31,10 @@ const Header = () => {
   }, []);
 
   const handleLogout = () => {
+    navigate("/");
     signOut(auth)
       .then(() => {
-        navigate("/");
+        alert("Logout successfull!");
       })
       .catch((error) => {
         alert("Error logging out: ", error);
