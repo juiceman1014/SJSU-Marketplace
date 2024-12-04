@@ -7,21 +7,20 @@ import { Link, useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const [username, setUsername] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user)
       if (user) {
         if(!user.emailVerified){
           navigate("/");
           alert("Your email must be verified to access this page!");
-          return;
         }
-      }else{
-        navigate("/");
-        alert("You must be logged in to access this page!");
-        return;
       }
+      setLoading(false);
     });
 
     return () => unsubscribe;
@@ -43,6 +42,16 @@ const ProfilePage = () => {
       alert("Error updating username: " + error);
     }
   };
+
+  if(loading){
+    return <p>Loading...</p>;
+  }
+
+  if(!currentUser){
+    navigate("/");
+    alert("You must be logged in to access the profile page!")
+  }
+
   return (
     <div className="profile-container">
     <div className="profile-form__box">
@@ -54,7 +63,6 @@ const ProfilePage = () => {
             placeholder="Enter New Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
           />
         </div>
         <button className="profile-form__submit" type="submit">
