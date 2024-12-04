@@ -1,12 +1,75 @@
 .profile-container{
     height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 1rem
 }
 
 .profile-form{
     display: flex;
     flex-direction: column;
 }
+
+.profile-form__box {
+    margin-top: -10rem; 
+    width: 90%; 
+    max-width: 400px; 
+    padding: 3rem;
+    border-radius: 15px;
+    background: #004987;
+    box-sizing: border-box;
+  }
+  
+  .profile-form__input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  
+  .profile-form__box label {
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+  
+  .profile-form__box input {
+    outline: none;
+    border: 1px solid #ccc;
+    background: white;
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 5px;
+    box-sizing: border-box; 
+    margin-bottom: 1rem;
+  }
+  
+  .profile-form__submit {
+    display: block;
+    margin: 0 auto;
+    margin-top: 1rem;
+    outline: none;
+    border: none;
+    background: #f7b500;
+    color: white;
+    font-size: 16px;
+    padding: 0.5rem 3rem;
+    border-radius: 25px;
+    text-align: center;
+  }
+  
+  .profile-form__submit:hover {
+    opacity: 0.75;
+  }
+  
+  .profile-form__link {
+    margin-top: 1rem;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .profile-form__link:hover {
+    text-decoration: underline;
+  }

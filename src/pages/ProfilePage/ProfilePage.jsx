@@ -44,21 +44,27 @@ const ProfilePage = () => {
     }
   };
   return (
-    <div>
-      <div className="profile-container">
-        <header>Profile</header>
-
-        <form className="profile-form" onSubmit={handleUpdate}>
+    <div className="profile-container">
+    <div className="profile-form__box">
+      <form className="profile-form" onSubmit={handleUpdate}>
+        <div className="profile-form__input">
+          <label htmlFor="username">Username</label>
           <input
-            placeholder="Username"
+            type="text"
+            placeholder="Enter New Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-          ></input>
-          <button type="submit">Update Username</button>
-          <button><Link to="/password">Reset Password</Link></button>
-        </form>
-      </div>
+          />
+        </div>
+        <button className="profile-form__submit" type="submit">
+          Update Username
+        </button>
+        <Link to="/password" className="profile-form__link">
+          Reset Password
+        </Link>
+      </form>
     </div>
+  </div>
   );
 };
 

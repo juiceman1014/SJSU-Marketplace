@@ -18,9 +18,7 @@ const HomePage = () => {
                 <p className="description">
                     Transaction is backed by trust and reliability to find what you need and make extra cash, all in a secure, student-friendly environment.
                 </p>
-                <Link to ="/register">
-                <button className="sign-up-button">Sign Up Now</button>
-                </Link>
+                
                 </div>
                 <div className="image">
                     <img src = "/images/SJSU.png" alt="Description"></img>
