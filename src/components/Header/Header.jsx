@@ -35,6 +35,7 @@ const Header = () => {
     signOut(auth)
       .then(() => {
         alert("Logout successfull!");
+        window.location.reload();
       })
       .catch((error) => {
         alert("Error logging out: ", error);
