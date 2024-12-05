@@ -294,11 +294,11 @@ const ListingPage = () => {
                 {item.imageUrl && (
                   <img src={item.imageUrl} className="listing-image"></img>
                 )}
-                <p>Category: {item.category}</p>
-                <p>Condition: {item.condition}</p>
-                <p>Description: {item.description}</p>
-                <p>Price: {item.price}</p>
-                <p>Seller: {item.userName}</p>
+                <p><b>Category:</b> {item.category}</p>
+                <p><b>Condition:</b> {item.condition}</p>
+                <p><b>Description:</b> {item.description}</p>
+                <p><b>Price</b> (USD): ${item.price}</p>
+                <p><b>Seller:</b> {item.userName}</p>
                 {item.userID === auth.currentUser.uid ? (
                   <>
                     <button onClick={() => openModal(item)}>Edit</button>
