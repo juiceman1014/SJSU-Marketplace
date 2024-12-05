@@ -290,7 +290,7 @@ const ListingPage = () => {
             {filteredListings.map((item, index) => (
               <div key={index} className="item">
                 <h3>{item.title}</h3>
-                <p>Date: {formatDate(item.timestamp)}</p>
+                <p><b>Date:</b> {formatDate(item.timestamp)}</p>
                 {item.imageUrl && (
                   <img src={item.imageUrl} className="listing-image"></img>
                 )}
